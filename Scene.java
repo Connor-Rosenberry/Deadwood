@@ -1,1 +1,117 @@
+import javax.management.relation.Role;
 
+public class Scene {
+    // VARIABLES
+    private int id;
+    private String name;
+    private int budget;
+    private String status;
+    private int shotCounter;
+    private Set location;
+    private String description;
+    private Role[] roles;
+
+    // CONSTRUCTORS
+    public Scene() {
+        this.id = 0;
+        this.name = "unknown";
+        this.budget = 0;
+        this.status = "unknown";
+        this.shotCounter = 0;
+        this.location = null;
+        this.description = "unknown";
+        this.roles = null;
+    }
+
+    public Scene(int id, String name, int budget, String status, int shotCounter, Set location, String description, Role[] roles){
+        this.id = id;
+        this.name = name;
+        this.budget = budget;
+        this.status = status;
+        this.shotCounter = shotCounter;
+        this.location = location;
+        this.description = description;
+        this.roles = roles;
+    }
+
+    // GETS/SETS
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getBudget() {
+        return this.budget
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getShotCounter() {
+        return this.shotCounter;
+    }
+
+    public void setShotCounter(int shotCounter) {
+        this.shotCounter = shotCounter;
+    }
+
+    public Set getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(Set location) {
+        this.location = location;
+    }
+
+    public String getDescription(){
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public roles[] getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Role[] roles) {
+        this.roles = roles;
+    }
+
+    // METHODS
+    // return total number of roles
+    public int totalRoles() {
+        return roles.length;
+    }
+
+    // set up a scene on the board
+    public void setScene(Set set) {
+
+    }
+
+    // end a scene and clean up
+    public void wrapScene() {
+
+    }
+}
