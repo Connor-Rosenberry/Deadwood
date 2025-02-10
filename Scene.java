@@ -1,4 +1,4 @@
-import javax.management.relation.Role;
+import java.util.Set;
 
 public class Scene {
     // VARIABLES
@@ -7,8 +7,8 @@ public class Scene {
     private String img;
     private int budget;
     private int number;
-    private String status;
-    private int shotCounter;
+    private String status;  // "not active", "active", or "wrapped"
+    private int shotCounter;  // depends on location
     private Set location;
     private String description;
     private Role[] roles;

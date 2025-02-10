@@ -1,5 +1,6 @@
 import java.io.File;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -9,8 +10,7 @@ import org.w3c.dom.Node;
 
 // reads in xml file and creates all 40 scenes (including roles), setting them in the scene array
 public class SceneCreator {
-    //  VARIABLES
-    public Scene[] scenes;
+    //  VARIABLESs
 
     // CONSTRUCTORS
 
@@ -19,8 +19,8 @@ public class SceneCreator {
     // METHODS
     // parse the cards xml and populare scenes
     // NOTE: cards.xml MUST be in the same directory as SceneCreator.java
-    public void parseSceneCards() {
-        scenes = new Scene[40];  // 40 total scenes
+    public Scene[] parseSceneCards() {
+        Scene[] scenes = new Scene[40];  // 40 total scenes
         try {
             // create documentbuilder (used to parse file)
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -105,13 +105,15 @@ public class SceneCreator {
                         roles[j] = newRole;
                     }
 
-                    // assign roles array to scene
-                    newScene.setRoles(roles);  // STOPPED HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    // assign roles array to scene and finish filling newScene
+                    newScene.setRoles(roles);
+                    newScene.setStatus("not active");
                 }
             }
-            
+            return scenes;  // return the initalized scene array with all card scenes set up
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 }
