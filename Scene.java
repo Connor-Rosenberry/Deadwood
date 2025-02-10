@@ -4,7 +4,9 @@ public class Scene {
     // VARIABLES
     private int id;
     private String name;
+    private String img;
     private int budget;
+    private int number;
     private String status;
     private int shotCounter;
     private Set location;
@@ -15,7 +17,9 @@ public class Scene {
     public Scene() {
         this.id = 0;
         this.name = "unknown";
+        this.img = "unknown";
         this.budget = 0;
+        this.number = 0;
         this.status = "unknown";
         this.shotCounter = 0;
         this.location = null;
@@ -51,8 +55,24 @@ public class Scene {
         this.name = name;
     }
 
+    public String getImg() {
+        return this.img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public int getNumber() {
+        return this.number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
     public int getBudget() {
-        return this.budget
+        return this.budget;
     }
 
     public void setBudget(int budget) {
