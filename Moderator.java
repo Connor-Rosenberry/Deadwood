@@ -26,6 +26,15 @@ public class Moderator {
     }
 
     private void handleInput(String input) {
-        
+        switch (input.toLowerCase()) {
+            case "End Game":
+                gameRunning = false;
+                break;
+            case "help":
+                view.displayMessage("Avaliable commands: End Game, help");
+                break;
+            default:
+                view.displayMessage("Unknown command. Type 'help' for options.");
+        }
     }
 }
