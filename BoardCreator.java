@@ -96,7 +96,7 @@ public class BoardCreator {
                     rooms[i].setY(Integer.parseInt(y));
                     rooms[i].setW(Integer.parseInt(w));
                     rooms[i].setH(Integer.parseInt(h));
-                    rooms[i].setTakes(takes);
+                    ((Set) rooms[i]).setTakes(takes);
                     rooms[i].setRoles(roles);  // TODO
                 }
 
@@ -152,4 +152,5 @@ public class BoardCreator {
             e.printStackTrace();
             return null;
         }
+    }
 }
