@@ -8,7 +8,6 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        this.location = "trailerPark";
         this.rank = 1;
         this.dollars = 0;
         this.credits = 0;
@@ -88,7 +87,7 @@ public class Player {
 
     }
     private void rehearse() {
-        
+
     }
 
 

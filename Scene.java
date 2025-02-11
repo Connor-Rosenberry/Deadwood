@@ -14,6 +14,10 @@ public class Scene {
     private Role[] roles;
 
     // CONSTRUCTORS
+    public Scene() {
+        
+    }
+
     public Scene(int id, String name, int budget, String status, int shotCounter, Set location, String description, Role[] roles){
         this.id = id;
         this.name = name;
@@ -98,7 +102,7 @@ public class Scene {
         this.description = description;
     }
 
-    public roles[] getRoles() {
+    public Role[] getRoles() {
         return this.roles;
     }
 

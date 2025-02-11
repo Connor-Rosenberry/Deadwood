@@ -3,6 +3,8 @@ public class Board {
     private Room[] rooms;
 
     // CONSTRUCTORS
+    public Board() {}
+
     public Board(Room[] rooms) {
         this.rooms = rooms;
     }
