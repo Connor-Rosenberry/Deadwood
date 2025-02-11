@@ -108,6 +108,8 @@ public class SceneCreator {
                     // assign roles array to scene and finish filling newScene
                     newScene.setRoles(roles);
                     newScene.setStatus("not active");
+
+                    scenes[i] = newScene;
                 }
             }
             return scenes;  // return the initalized scene array with all card scenes set up

@@ -1,7 +1,7 @@
 public class Room {
     //  VARIABLES
     protected String name;
-    protected Room[] neighbors;
+    protected String[] neighbors;  // array of adjacent rooms names
     protected Player[] playersHere;
     protected int x;
     protected int y;
@@ -19,7 +19,7 @@ public class Room {
         this.h = 0;
     }
 
-    public Room(String name, Room[] neighbors, Player[] playersHere, int x, int y, int w, int h) {
+    public Room(String name, String[] neighbors, Player[] playersHere, int x, int y, int w, int h) {
         this.name = name;
         this.neighbors = neighbors;
         this.playersHere = playersHere;
@@ -38,11 +38,11 @@ public class Room {
         this.name = name;
     }
 
-    public Room[] getNeighbors() {
+    public String[] getNeighbors() {
         return this.neighbors;
     }
 
-    public void setNeighbors(Room[] neighbors) {
+    public void setNeighbors(String[] neighbors) {
         this.neighbors = neighbors;
     }
 
