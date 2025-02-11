@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 
 // reads in xml file and creates all 40 scenes (including roles), setting them in the scene array
 public class SceneCreator {
-    //  VARIABLESs
+    //  VARIABLES
 
     // CONSTRUCTORS
 
