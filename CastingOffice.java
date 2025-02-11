@@ -3,8 +3,13 @@ public class CastingOffice extends Room {
     private Rank[] ranks;
 
     // CONSTRUCTORS
-    public CastingOffice(String name, Room[] adjacentRooms, Player[] playersHere, Rank[] ranks) {
-        super(name, adjacentRooms, playersHere);
+    public CastingOffice() {
+        super();
+        this.ranks = null;
+    }
+
+    public CastingOffice(String name, Room[] adjacentRooms, Player[] playersHere, int x, int y, int w, int h, Rank[] ranks) {
+        super(name, adjacentRooms, playersHere, x, y, w, h);
         this.ranks = ranks;
     }
 

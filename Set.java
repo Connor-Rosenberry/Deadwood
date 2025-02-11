@@ -3,13 +3,23 @@ public class Set extends Room  {
     private String status;
     private Scene scene;
     private Role[] roles;
+    private Take[] takes;
 
     // CONSTRUCTORS
-    public Set(String name, Room[] adjacentRooms, Player[] playersHere, String status, Scene scene, Role[] roles) {
-        super(name, adjacentRooms, playersHere);
+    public Set() {
+        super();
+        this.status = null;
+        this.scene = null;
+        this.roles = null;
+        this.takes = null;
+    }
+
+    public Set(String name, Room[] adjacentRooms, Player[] playersHere, int x, int y, int w, int h, String status, Scene scene, Role[] roles, Take[] takes) {
+        super(name, adjacentRooms, playersHere, x, y, w, h);
         this.status = status;
         this.scene = scene;
         this.roles = roles;
+        this.takes = takes;
     }
 
     // GETS/SETS
@@ -35,6 +45,14 @@ public class Set extends Room  {
 
     public void setRoles(Role[] roles) {
         this.roles = roles;
+    }
+
+    public Take[] getTakes() {
+        return this.takes;
+    }
+
+    public void setTakes(Take[] takes) {
+        this.takes = takes;
     }
 
     // METHODS

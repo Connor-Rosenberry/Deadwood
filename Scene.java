@@ -14,6 +14,17 @@ public class Scene {
     private Role[] roles;
 
     // CONSTRUCTORS
+    public Scene(){
+        this.id = 0;
+        this.name = null;
+        this.budget = 0;
+        this.status = null;
+        this.shotCounter = 0;
+        this.location = null;
+        this.description = null;
+        this.roles = null;
+    }
+
     public Scene(int id, String name, int budget, String status, int shotCounter, Set location, String description, Role[] roles){
         this.id = id;
         this.name = name;

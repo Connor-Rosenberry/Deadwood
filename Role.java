@@ -15,6 +15,22 @@ public class Role {
     private int h;
 
     // CONSTRUCTORS
+    public Role() {
+        this.name = null;
+        this.rankToAct = 0;
+        this.status = null;
+        this.priority = 0;
+        this.onCard = false;
+        this.practiceChips = 0;
+        this.actor = null;
+        this.scene = null;
+        this.dialogue = null;
+        this.x = 0;
+        this.y = 0;
+        this.w = 0;
+        this.y = 0;
+    }
+
     public Role(String name, int rankToAct, String status, int priority, boolean onCard, int practiceChips, Player actor, Scene scene, String dialogue, int x, int y, int w, int h) {
         this.name = name;
         this.rankToAct = rankToAct;

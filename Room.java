@@ -1,14 +1,32 @@
 public class Room {
     //  VARIABLES
     protected String name;
-    protected Room[] adjacentRooms;
+    protected Room[] neighbors;
     protected Player[] playersHere;
+    protected int x;
+    protected int y;
+    protected int w;
+    protected int h;
 
     // CONSTRUCTORS
-    public Room(String name, Room[] adjacentRooms, Player[] playersHere) {
+    public Room() {
+        this.name = null;
+        this.neighbors = null;
+        this.playersHere = null;
+        this.x = 0;
+        this.y = 0;
+        this.w = 0;
+        this.h = 0;
+    }
+
+    public Room(String name, Room[] neighbors, Player[] playersHere, int x, int y, int w, int h) {
         this.name = name;
-        this.adjacentRooms = adjacentRooms;
+        this.neighbors = neighbors;
         this.playersHere = playersHere;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
 
     // GETS/SETS
@@ -20,12 +38,12 @@ public class Room {
         this.name = name;
     }
 
-    public Room[] getRooms() {
-        return this.adjacentRooms;
+    public Room[] getNeighbors() {
+        return this.neighbors;
     }
 
-    public void setRooms(Room[] adjacentRooms) {
-        this.adjacentRooms = adjacentRooms;
+    public void setNeighbors(Room[] neighbors) {
+        this.neighbors = neighbors;
     }
 
     public Player[] getPlayersHere() {
@@ -34,6 +52,38 @@ public class Room {
 
     public void setPlayersHere(Player[] playersHere) {
         this.playersHere = playersHere
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getW() {
+        return this.w;
+    }
+
+    public void setW(int w) {
+        this.w = w;
+    }
+
+    public int getH() {
+        return this.h;
+    }
+
+    public void setH(int h) {
+        this.h = h;
     }
 
     // METHODS

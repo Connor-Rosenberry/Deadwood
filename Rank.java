@@ -5,6 +5,12 @@ public class Rank {
     private int creditCost;
 
     // CONSTRUCTORS
+    public Rank() {
+        this.rankLevel = 0;
+        this.dollarCost = 0;
+        this.creditCost = 0;
+    }
+
     public Rank(int rankLevel, int dollarCost, int creditCost) {
         this.rankLevel = rankLevel;
         this.dollarCost = dollarCost;
