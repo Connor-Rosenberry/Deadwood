@@ -3,8 +3,20 @@ public class Board {
     private Room[] rooms;
 
     // CONSTRUCTORS
+    public Board(Room[] rooms) {
+        this.rooms = rooms;
+    }
 
     // GETS/SETS
+    public Room[] getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Room[] rooms) {
+        this.rooms = rooms;
+    }
 
     // METHODS
+    public void setUpBoard(){}
+    public void clearBoard(){}
 }
