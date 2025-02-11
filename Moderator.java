@@ -19,21 +19,28 @@ public class Moderator {
         
         // create "numPlayers" number of players
         for(int i = 0; i < numPlayers; i++) {
-            view.displayMessage("what is player " + i + 1 + "'s name?");
+            view.displayMessage("what is player " + (i + 1) + "'s name?");
             String input = view.getUserInput();
             Player player = new Player(input);
             playerList[i] = player;
         }
 
 
+        int playersTurn = 0;
+
+        // loop for while the game is running
+        // Also note that a "player's" number is one number higher than their index in playerList
+        // ex. player 1 = playerList[0];
         while(gameRunning) {
 
             // get the player and tell them its their turn
-            view.displayMessage("its player" + "'s turn");
+            view.displayMessage("its player " + (playersTurn + 1) + "'s turn");
 
             String input = view.getUserInput();
 
             handleInput(input);
+            
+            playersTurn++;
             gameRunning = false;
         }
 
