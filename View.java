@@ -16,4 +16,10 @@ public class View {
         return scanner.nextLine();
     }
 
+    public int getUserInt() {
+        System.out.print("Enter a number: ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
 }
