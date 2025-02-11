@@ -109,7 +109,7 @@ public class Scene {
         this.description = description;
     }
 
-    public roles[] getRoles() {
+    public Role[] getRoles() {
         return this.roles;
     }
 

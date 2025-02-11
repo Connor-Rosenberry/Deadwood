@@ -84,6 +84,9 @@ public class BoardCreator {
                         takes[j].setY(Integer.parseInt(takeY));
                         takes[j].setW(Integer.parseInt(takeW));
                         takes[j].setH(Integer.parseInt(takeH));
+
+                        // get parts
+                        // TODO
                     }
                     
                     // assign attributes
@@ -94,6 +97,7 @@ public class BoardCreator {
                     rooms[i].setW(Integer.parseInt(w));
                     rooms[i].setH(Integer.parseInt(h));
                     rooms[i].setTakes(takes);
+                    rooms[i].setRoles(roles);  // TODO
                 }
 
                 // casting office

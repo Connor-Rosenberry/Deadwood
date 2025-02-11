@@ -99,7 +99,7 @@ public class SceneCreator {
                         newRole.setX(Integer.parseInt(x));
                         newRole.setY(Integer.parseInt(y));
                         newRole.setW(Integer.parseInt(w));
-                        newRole.setH(Integer.parseInt(h))
+                        newRole.setH(Integer.parseInt(h));
 
                         // populate scenes roles array
                         roles[j] = newRole;

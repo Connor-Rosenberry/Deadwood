@@ -51,7 +51,7 @@ public class Room {
     }
 
     public void setPlayersHere(Player[] playersHere) {
-        this.playersHere = playersHere
+        this.playersHere = playersHere;
     }
 
     public int getX() {
