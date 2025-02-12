@@ -19,6 +19,7 @@ public class Board {
     }
 
     // METHODS
-    public void setUpBoard(){}  // call BoardCreator here
+    // public void setUpBoard(){}  // call BoardCreator here
+    
     public void clearBoard(){}
 }
