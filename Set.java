@@ -14,7 +14,7 @@ public class Set extends Room  {
         this.takes = null;
     }
 
-    public Set(String name, Room[] adjacentRooms, Player[] playersHere, int x, int y, int w, int h, String status, Scene scene, Role[] roles, Take[] takes) {
+    public Set(String name, String[] adjacentRooms, Player[] playersHere, int x, int y, int w, int h, String status, Scene scene, Role[] roles, Take[] takes) {
         super(name, adjacentRooms, playersHere, x, y, w, h);
         this.status = status;
         this.scene = scene;

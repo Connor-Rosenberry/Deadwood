@@ -53,7 +53,7 @@ public class BoardCreator {
                     for (int j = 0; j < neighborsList.getLength(); j++) {
                         Element neighbor = (Element) neighborsList.item(j);
                         // assign neighors name
-                        neighbors[i] = neighbor.getAttribute("name");
+                        neighbors[j] = neighbor.getAttribute("name");
                     }
                     
                     // area attributes
@@ -103,10 +103,10 @@ public class BoardCreator {
 
                         // get area
                         Element roleArea = (Element) role.getElementsByTagName("area").item(0);
-                        String roleX = area.getAttribute("x");
-                        String roleY = area.getAttribute("y");
-                        String roleW = area.getAttribute("w");
-                        String roleH = area.getAttribute("h");
+                        String roleX = roleArea.getAttribute("x");
+                        String roleY = roleArea.getAttribute("y");
+                        String roleW = roleArea.getAttribute("w");
+                        String roleH = roleArea.getAttribute("h");
 
                         // assign to newRole
                         newRole.setName(roleName);
@@ -122,7 +122,7 @@ public class BoardCreator {
                         newRole.setH(Integer.parseInt(roleH));
 
                         // populate roles array
-                        roles[i] = newRole;
+                        roles[j] = newRole;
                     }
                     
                     // assign attributes
@@ -132,15 +132,15 @@ public class BoardCreator {
                     rooms[i].setY(Integer.parseInt(y));
                     rooms[i].setW(Integer.parseInt(w));
                     rooms[i].setH(Integer.parseInt(h));
-                    rooms[i].setTakes(takes);  // Set attribute only -- error?
-                    rooms[i].setRoles(roles);  // Set attribute only -- error?
+                    ((Set) rooms[i]).setTakes(takes);
+                    ((Set) rooms[i]).setRoles(roles);
                 }
 
                 // casting office
                 Element castingOffice = (Element) root.getElementsByTagName("office").item(0);
-                rooms[11] = new CastingOffice();
+                rooms[10] = new CastingOffice();
                 if (castingOffice != null) {
-                    rooms[11].setName("Office");
+                    rooms[10].setName("Office");
                     
                     // neighbor attributes
                     NodeList castingOfficeNeighbors = castingOffice.getElementsByTagName("neighbor");
@@ -148,9 +148,9 @@ public class BoardCreator {
                     for (int j = 0; j < castingOfficeNeighbors.getLength(); j++) {
                         Element neighbor = (Element) castingOfficeNeighbors.item(j);
                         // assign neighors name
-                        neighbors[i] = neighbor.getAttribute("name");
+                        neighbors[j] = neighbor.getAttribute("name");
                     }
-                    rooms[11].setNeighbors(neighbors);
+                    rooms[10].setNeighbors(neighbors);
 
                     // extract area
                     Element castingOfficeArea = (Element) castingOffice.getElementsByTagName("area").item(0);
@@ -161,10 +161,10 @@ public class BoardCreator {
                         String coh = castingOfficeArea.getAttribute("h");
 
                         // assignment
-                        rooms[11].setX(Integer.parseInt(cox));
-                        rooms[11].setY(Integer.parseInt(coy));
-                        rooms[11].setW(Integer.parseInt(cow));
-                        rooms[11].setH(Integer.parseInt(coh));
+                        rooms[10].setX(Integer.parseInt(cox));
+                        rooms[10].setY(Integer.parseInt(coy));
+                        rooms[10].setW(Integer.parseInt(cow));
+                        rooms[10].setH(Integer.parseInt(coh));
                     }
 
                     // extract ranks
@@ -178,7 +178,7 @@ public class BoardCreator {
                         String cost = rank.getAttribute("currency");
 
                         // assign rank
-                        if (currencyType == "dollar") {  // if currency is in dollars, create a new Rank()
+                        if (currencyType.equals("dollar")) {  // if currency is in dollars, create a new Rank()
                             Rank newRank = new Rank();
                             newRank.setRankLevel(Integer.parseInt(level));
                             newRank.setDollarCost(Integer.parseInt(cost));
@@ -187,14 +187,14 @@ public class BoardCreator {
                             ranks[j-5].setCreditCost(Integer.parseInt(cost));
                         }
                     }
-                    rooms[11].setRanks(ranks);  // CastingOffice attribute only -- error?
+                    ((CastingOffice) rooms[10]).setRanks(ranks);
                 }
 
                 // trailer
                 Element trailer = (Element) root.getElementsByTagName("trailer").item(0);
-                rooms[12] = new Room();
+                rooms[11] = new Room();
                 if (trailer != null) {
-                    rooms[12].setName("Trailer");
+                    rooms[11].setName("Trailer");
 
                     // neighbor attributes
                     NodeList trailerNeighbors = trailer.getElementsByTagName("neighbor");
@@ -202,9 +202,9 @@ public class BoardCreator {
                     for (int j = 0; j < trailerNeighbors.getLength(); j++) {
                         Element neighbor = (Element) trailerNeighbors.item(j);
                         // assign neighors name
-                        neighbors[i] = neighbor.getAttribute("name");
+                        neighbors[j] = neighbor.getAttribute("name");
                     }
-                    rooms[12].setNeighbors(neighbors);
+                    rooms[11].setNeighbors(neighbors);
 
                     // extract area
                     Element trailerArea = (Element) trailer.getElementsByTagName("area").item(0);
@@ -215,10 +215,10 @@ public class BoardCreator {
                         String th = trailerArea.getAttribute("h");
 
                         // assignment
-                        rooms[12].setX(Integer.parseInt(tx));
-                        rooms[12].setY(Integer.parseInt(ty));
-                        rooms[12].setW(Integer.parseInt(tw));
-                        rooms[12].setH(Integer.parseInt(th));
+                        rooms[11].setX(Integer.parseInt(tx));
+                        rooms[11].setY(Integer.parseInt(ty));
+                        rooms[11].setW(Integer.parseInt(tw));
+                        rooms[11].setH(Integer.parseInt(th));
                     }
                 }
             }
@@ -229,8 +229,6 @@ public class BoardCreator {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-    }
         }
     }
 }
