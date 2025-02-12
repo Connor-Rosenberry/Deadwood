@@ -140,7 +140,7 @@ public class BoardCreator {
                 Element castingOffice = (Element) root.getElementsByTagName("office").item(0);
                 rooms[10] = new CastingOffice();
                 if (castingOffice != null) {
-                    rooms[10].setName("Office");
+                    rooms[10].setName("office");
                     
                     // neighbor attributes
                     NodeList castingOfficeNeighbors = castingOffice.getElementsByTagName("neighbor");
@@ -169,22 +169,27 @@ public class BoardCreator {
 
                     // extract ranks
                     NodeList rankList = castingOffice.getElementsByTagName("upgrade");
+                    // init rank array
                     Rank[] ranks = new Rank[rankList.getLength()/2];
+                    for (int j = 0; j < ranks.length; j++) {
+                        ranks[j] = new Rank();
+                        ranks[j].setRankLevel(j+2);
+                    }
+                    // for each rank in the xml
                     for (int j = 0; j < rankList.getLength(); j++) {
                         // extract rank
                         Element rank = (Element) rankList.item(j);
-                        String level = rank.getAttribute("level");
-                        String currencyType = rank.getAttribute("amt");
-                        String cost = rank.getAttribute("currency");
+                        int level = Integer.parseInt(rank.getAttribute("level"));
+                        String currencyType = rank.getAttribute("currency");
+                        String cost = rank.getAttribute("amt");
 
                         // assign rank
-                        if (currencyType.equals("dollar")) {  // if currency is in dollars, create a new Rank()
-                            Rank newRank = new Rank();
-                            newRank.setRankLevel(Integer.parseInt(level));
-                            newRank.setDollarCost(Integer.parseInt(cost));
-                            ranks[j] = newRank;
-                        } else {  // else, rank already exists, input credit cost into same level's rank
-                            ranks[j-5].setCreditCost(Integer.parseInt(cost));
+                        if (currencyType.equals("dollar")) {  // currency givin in dollars
+                            ranks[level - 2].setDollarCost(Integer.parseInt(cost));
+                        } else if (currencyType.equals("credit")) {  // currency givin in credits
+                            ranks[level - 2].setCreditCost(Integer.parseInt(cost));
+                        } else {
+                            System.out.println("currency: '" + currencyType + "'");
                         }
                     }
                     ((CastingOffice) rooms[10]).setRanks(ranks);
@@ -194,7 +199,7 @@ public class BoardCreator {
                 Element trailer = (Element) root.getElementsByTagName("trailer").item(0);
                 rooms[11] = new Room();
                 if (trailer != null) {
-                    rooms[11].setName("Trailer");
+                    rooms[11].setName("trailer");
 
                     // neighbor attributes
                     NodeList trailerNeighbors = trailer.getElementsByTagName("neighbor");
