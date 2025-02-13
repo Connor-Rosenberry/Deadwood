@@ -22,9 +22,9 @@ public class Moderator {
         sceneList = createCard.parseSceneCards();
 
         // test
-        for(int i = 0; i < sceneList.length; i++) {
-            System.out.println(sceneList[i].getName());
-        }
+        // for(int i = 0; i < sceneList.length; i++) {
+        //     System.out.println(sceneList[i].getName());
+        // }
 
         // set up the rooms with scenes
         sceneList = startDay(sceneList);
@@ -54,12 +54,11 @@ public class Moderator {
         // ex. player 1 = playerList[0];
         while (gameRunning) {
             view.displayMessage("It's " + playerList[currentPlayer].getName() + "'s turn.");
-
             boolean turnActive = true;
 
             // Player's turn loop
             while (turnActive && gameRunning) {
-                view.displayMessage("Enter a command (type 'help' for options):");
+                view.displayMessage("\nEnter a command (type 'help' for options):");
                 String input = view.getUserInput();
                 turnActive = handleInput(input, playerList, currentPlayer);
             }
@@ -71,8 +70,6 @@ public class Moderator {
                 // start new day
             // }
         }
-
-        view.displayMessage("Game Over");
     }
 
     // start a new day, clear the board and set new scenes
@@ -101,53 +98,102 @@ public class Moderator {
 
     // handle user input
     private boolean handleInput(String input, Player[] playerList, int currentPlayer) {
-        switch (input.toLowerCase()) {
-            case "all players locations":
-                for (Player player : playerList) {
-                    view.displayMessage(player.getName() + " is in " + (player.getLocation() != null ? player.getLocation().getName() : "an unknown location"));
-                }
-                return true; // Continue turn
+        List<String> command = new ArrayList<>(Arrays.asList(input.split(" "))); // Split input into words
+        int commandLength = command.size();
+    
+        if (command.get(0).equals("move")) {
+            if (commandLength == 1) {
+                view.displayMessage("Move where? Please specify a destination.");
+                return true;
+            }
+    
+            String destination = String.join(" ", command.subList(1, commandLength));
+            view.displayMessage("Attempting to move to: " + destination);
+    
+            // Implement movement logic here (validate if destination exists and is adjacent)
+            move(playerList[currentPlayer], destination);
 
-            case "active player location":
-                Player activePlayer = playerList[currentPlayer];
-                view.displayMessage(activePlayer.getName() + " is in " + (activePlayer.getLocation() != null ? activePlayer.getLocation().getName() : "an unknown location"));
-                return true; // Continue turn
+            return true;
 
-            case "active player":
-                view.displayMessage("Active player: " + playerList[currentPlayer].getName());
-                return true; // Continue turn
+        } 
+        else if (String.join(" ", command).equals("all players locations")) {
+            for (Player player : playerList) {
+                view.displayMessage(player.getName() + " is in " + 
+                    (player.getLocation() != null ? player.getLocation().getName() : "an unknown location"));
+            }
+            return true;
 
-            case "move":
-                // Implement movement logic here
-                view.displayMessage("Move command selected.");
-                return true; // Continue turn
+        } 
+        else if (String.join(" ", command).equals("active players locations")) {
+            view.displayMessage(playerList[currentPlayer].getName() + " is in " + 
+                (playerList[currentPlayer].getLocation()));
+            return true;
 
-            case "work":
-                // Implement work logic here
-                view.displayMessage("Work command selected.");
-                return true; // Continue turn
+        } 
+        else if (String.join(" ", command).equals("active player")) {
+            view.displayMessage("Active player: " + playerList[currentPlayer].getName());
+            return true;
 
-            case "upgrade":
-                // Implement upgrade logic here
-                view.displayMessage("Upgrade command selected.");
-                return true; // Continue turn
+        } 
+        else if (String.join(" ", command).equals("adjacent rooms")) {
+            view.displayMessage(Arrays.toString(playerList[currentPlayer].getLocation().getNeighbors()));
+            return true;
 
-            case "end":
-                view.displayMessage(playerList[currentPlayer].getName() + "'s turn has ended.");
-                return false; // End turn
+        } 
+        else if (command.get(0).equals("work")) {
+            view.displayMessage("Work command selected.");
 
-            case "end game":
-                gameRunning = false;
-                view.displayMessage("Game Over");
-                return false; // End game immediately
+            // work();
+            
+            return false;
 
-            case "help":
-                view.displayMessage("Available commands: all players locations, active player location, active player, move, work, upgrade, end, end game");
-                return true; // Continue turn
+        } 
+        else if (command.get(0).equals("upgrade")) {
+            view.displayMessage("Upgrade command selected.");
+            CastingOffice office = (CastingOffice) board.getRooms()[10];
+            if(playerList[currentPlayer].getLocation() != office) {
+                view.displayMessage("Cannot upgrade unless at casting office");
+            }
 
-            default:
-                view.displayMessage("Unknown command. Type 'help' for options.");
-                return true; // Continue turn
+            return true;
+
+        } 
+        else if (commandLength == 1 && command.get(0).equals("end")) {
+            view.displayMessage(playerList[currentPlayer].getName() + "'s turn has ended.");
+            return false;
+        } 
+        else if (String.join(" ", command).equals("end game")) {
+            gameRunning = false;
+            view.displayMessage("Game Over");
+            return false;
+        } 
+        else if (command.get(0).equals("help")) {
+            view.displayMessage("Available commands: all players locations, active player location, active player, move <destination>, work, upgrade, end, end game");
+            return true;
+        } 
+        else {
+            view.displayMessage("Unknown command. Type 'help' for options.");
+            return true;
         }
+    }
+
+    private boolean move(Player currentPlayer, String destination) {
+        boolean legalMove = false;
+        for(int i = 0; i < currentPlayer.getLocation().getNeighbors().length; i ++) {
+            if(currentPlayer.getLocation().getNeighbors()[i].equals(destination)) {
+                legalMove = true;
+            }
+        }
+        if(!legalMove) {
+            view.displayMessage("The destination is not an adjacent move");
+            return false;
+        }
+        for(int i = 0; i < board.getRooms().length; i++) {
+            if(board.getRooms()[i].getName().equals(destination)) {
+                currentPlayer.setLocation(board.getRooms()[i]);
+            }
+        }
+
+        return true;
     }
 }
