@@ -17,9 +17,6 @@ public class Board {
     public void setRooms(Room[] rooms) {
         this.rooms = rooms;
     }
-
-    // METHODS
-    // public void setUpBoard(){}  // call BoardCreator here
     
     public void clearBoard(){}
 }

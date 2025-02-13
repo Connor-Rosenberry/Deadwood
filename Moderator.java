@@ -1,4 +1,7 @@
 import java.util.Arrays;
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Moderator {
     private Board board;
@@ -11,7 +14,21 @@ public class Moderator {
         this.gameRunning = true;
     }
 
+    // start the game, includes the loop until game over
     public void startGame() {
+        // create scene cards
+        Scene[] sceneList;
+        SceneCreator createCard = new SceneCreator();
+        sceneList = createCard.parseSceneCards();
+
+        // test
+        for(int i = 0; i < sceneList.length; i++) {
+            System.out.println(sceneList[i].getName());
+        }
+
+        // set up the rooms with scenes
+        sceneList = startDay(sceneList);
+
         // get the number of players
         view.displayMessage("How many players will be playing today? [2-8]");
         int numPlayers = view.getUserInt();
@@ -28,7 +45,7 @@ public class Moderator {
             playerList[i] = player;
         }
 
-        System.out.println(Arrays.toString(board.getRooms()));
+        // System.out.println(Arrays.toString(board.getRooms()));
 
         int currentPlayer = 0;
 
@@ -49,11 +66,40 @@ public class Moderator {
 
             // Move to the next player after their turn ends
             currentPlayer = (currentPlayer + 1) % playerList.length;
+
+            // if(dayOver) {
+                // start new day
+            // }
         }
 
         view.displayMessage("Game Over");
     }
 
+    // start a new day, clear the board and set new scenes
+    public Scene[] startDay(Scene[] sceneList) {
+        // clear board, and assign 10 new rooms
+        Random rand = new Random();
+        List<Scene> sceneArrayList = new ArrayList<>(List.of(sceneList)); // Convert array to List
+
+        Scene[] selectedScenes = new Scene[10]; // Array for selected scenes
+
+        for (int i = 0; i < 10; i++) {
+            int randomIndex = rand.nextInt(sceneArrayList.size()); // Pick a random index
+            selectedScenes[i] = sceneArrayList.remove(randomIndex); // Remove and store the scene
+        }
+
+        // Convert the remaining list back to an array
+        Scene[] remainingScenes = sceneArrayList.toArray(new Scene[0]);
+
+        // for the 10 rooms that need scenes assign a scene
+        for(int i = 0; i < 10; i++) {
+            ((Set) board.getRooms()[i]).setScene(selectedScenes[i]);
+        }
+
+        return remainingScenes;
+    }
+
+    // handle user input
     private boolean handleInput(String input, Player[] playerList, int currentPlayer) {
         switch (input.toLowerCase()) {
             case "all players locations":
