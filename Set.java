@@ -61,6 +61,15 @@ public class Set extends Room  {
 
     }
 
+    // return the names of all roles on this set
+    public String[] getRoleNames() {
+        String[] names = new String[roles.length];
+        for(int i = 0; i < roles.length; i++) {
+            names[i] = roles[i].getName();
+        }
+        return names;
+    }
+
     @Override
     public boolean isSet() {
         return true;

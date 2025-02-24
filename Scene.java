@@ -123,6 +123,15 @@ public class Scene {
         return roles.length;
     }
 
+    // return the names of all roles in this scene 
+    public String[] getRoleNames() {
+        String[] names = new String[roles.length];
+        for(int i = 0; i < roles.length; i++) {
+            names[i] = roles[i].getName();
+        }
+        return names;
+    }
+
     // set up a scene on the board
     public void setScene(Set set) {
 
