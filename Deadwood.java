@@ -8,7 +8,6 @@ public class Deadwood {
         BoardCreator fill = new BoardCreator();
         board = fill.parseBoard();
         
-        
         View view = new View();
         Moderator moderator = new Moderator(board, view);
 

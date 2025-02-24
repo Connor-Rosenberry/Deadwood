@@ -21,11 +21,6 @@ public class Moderator {
         SceneCreator createCard = new SceneCreator();
         sceneList = createCard.parseSceneCards();
 
-        // test
-        // for(int i = 0; i < sceneList.length; i++) {
-        //     System.out.println(sceneList[i].getName());
-        // }
-
         // set up the rooms with scenes
         sceneList = startDay(sceneList);
 
@@ -45,8 +40,6 @@ public class Moderator {
             playerList[i] = player;
         }
 
-        // System.out.println(Arrays.toString(board.getRooms()));
-
         int currentPlayer = 0;
 
         // loop for while the game is running
@@ -65,6 +58,7 @@ public class Moderator {
 
             // Move to the next player after their turn ends
             currentPlayer = (currentPlayer + 1) % playerList.length;
+            playerList[currentPlayer].setHasMoved(false);
 
             // if(dayOver) {
                 // start new day
@@ -102,6 +96,10 @@ public class Moderator {
         int commandLength = command.size();
     
         if (command.get(0).equals("move")) {
+            if(playerList[currentPlayer].getHasMoved() == true) {
+                view.displayMessage("Player has already moved, please pick a different command");
+                return true;
+            }
             if (commandLength == 1) {
                 view.displayMessage("Move where? Please specify a destination.");
                 return true;
@@ -126,7 +124,7 @@ public class Moderator {
         } 
         else if (String.join(" ", command).equals("active players locations")) {
             view.displayMessage(playerList[currentPlayer].getName() + " is in " + 
-                (playerList[currentPlayer].getLocation()));
+                (playerList[currentPlayer].getLocation().getName()));
             return true;
 
         } 
@@ -178,6 +176,10 @@ public class Moderator {
     }
 
     private boolean move(Player currentPlayer, String destination) {
+
+        // move this to player class, in moderator loop through and find the room based on the name, if cant find then room doesnt exist. if can find then send that room in the destination then in player we can see if it is an adjacent room 
+
+
         boolean legalMove = false;
         for(int i = 0; i < currentPlayer.getLocation().getNeighbors().length; i ++) {
             if(currentPlayer.getLocation().getNeighbors()[i].equals(destination)) {
@@ -191,9 +193,9 @@ public class Moderator {
         for(int i = 0; i < board.getRooms().length; i++) {
             if(board.getRooms()[i].getName().equals(destination)) {
                 currentPlayer.setLocation(board.getRooms()[i]);
+                currentPlayer.setHasMoved(true);
             }
         }
-
         return true;
     }
 }

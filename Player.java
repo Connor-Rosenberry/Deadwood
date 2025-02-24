@@ -6,11 +6,15 @@ public class Player {
     private int credits;
     private Role role;
 
+    // added
+    private boolean hasMoved;
+
     public Player(String name) {
         this.name = name;
         this.rank = 1;
         this.dollars = 0;
         this.credits = 0;
+        this.hasMoved = false;
     }
 
     public String getName() {
@@ -68,6 +72,14 @@ public class Player {
 
     public void addCredits(int credits) {
         this.credits += credits;
+    }
+
+    public boolean getHasMoved() {
+        return this.hasMoved;
+    }
+
+    public void setHasMoved(boolean set) {
+        this.hasMoved = set;
     }
 
     // might be in moderator class below
