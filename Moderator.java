@@ -7,6 +7,9 @@ public class Moderator {
     private Board board;
     private View view;
     private boolean gameRunning;
+    private Scene[] sceneList;
+    private Player[] playerList;
+    private int daycount;
 
     public Moderator(Board board, View view) {
         this.board = board;
@@ -16,29 +19,36 @@ public class Moderator {
 
     // start the game, includes the loop until game over
     public void startGame() {
-        // create scene cards
-        Scene[] sceneList;
-        SceneCreator createCard = new SceneCreator();
-        sceneList = createCard.parseSceneCards();
-
-        // set up the rooms with scenes
-        sceneList = startDay(sceneList);
-
         // get the number of players
         view.displayMessage("How many players will be playing today? [2-8]");
         int numPlayers = view.getUserInt();
 
-
-        Player[] playerList = new Player[numPlayers];
+        playerList = new Player[numPlayers];
         
         // create "numPlayers" number of players
         for(int i = 0; i < numPlayers; i++) {
             view.displayMessage("what is player " + (i + 1) + "'s name?");
             String input = view.getUserInput();
             Player player = new Player(input);
-            player.setLocation(board.getRooms()[11]);
             playerList[i] = player;
+            if(numPlayers == 5) {
+                player.setCredits(2);
+            }
+            if(numPlayers == 6) {
+                player.setCredits(4);
+            }
+            if(numPlayers <= 7) {
+                player.setRank(2);
+            }
         }
+
+        // create scene cards
+        SceneCreator createCard = new SceneCreator();
+        sceneList = createCard.parseSceneCards();
+
+        // set up the rooms with scenes
+        sceneList = startDay(sceneList, playerList);
+        
 
         int currentPlayer = 0;
 
@@ -67,7 +77,13 @@ public class Moderator {
     }
 
     // start a new day, clear the board and set new scenes
-    public Scene[] startDay(Scene[] sceneList) {
+    public Scene[] startDay(Scene[] sceneList, Player[] playerList) {
+        if(daycount == 4) {
+            //end game
+        }
+        if(playerList.length <= 3 && daycount == 3) {
+            // end game
+        }
         // clear board, and assign 10 new rooms
         Random rand = new Random();
         List<Scene> sceneArrayList = new ArrayList<>(List.of(sceneList)); // Convert array to List
@@ -87,6 +103,14 @@ public class Moderator {
             ((Set) board.getRooms()[i]).setScene(selectedScenes[i]);
         }
 
+        // set the players back to the trailers
+        for(int i = 0; i < playerList.length; i++) {
+            Player player = playerList[i];
+            player.setLocation(board.getRooms()[11]);
+            player.setRole(null);
+        }
+        
+
         return remainingScenes;
     }
 
@@ -98,6 +122,10 @@ public class Moderator {
         if (command.get(0).equals("move")) {
             if(playerList[currentPlayer].getHasMoved() == true) {
                 view.displayMessage("Player has already moved, please pick a different command");
+                return true;
+            }
+            if(playerList[currentPlayer].getRole() != null) {
+                view.displayMessage("cannot move while working");
                 return true;
             }
             if (commandLength == 1) {
@@ -131,11 +159,6 @@ public class Moderator {
             return true;
 
         } 
-        else if (String.join(" ", command).equals("active player")) {
-            view.displayMessage("Active player: " + playerList[currentPlayer].getName());
-            return true;
-
-        } 
         else if (String.join(" ", command).equals("adjacent rooms")) {
             view.displayMessage(Arrays.toString(playerList[currentPlayer].getLocation().getNeighbors()));
             return true;
@@ -145,6 +168,10 @@ public class Moderator {
             view.displayMessage("Work command selected.");
             if (commandLength == 1) {
                 view.displayMessage("Please specify a role to work");
+                return true;
+            }
+            if(playerList[currentPlayer].getRole() != null) {
+                view.displayMessage("You are already working, you can act or rehearse");
                 return true;
             }
             // player must be at a location with roles
@@ -160,7 +187,7 @@ public class Moderator {
             // if the player was sucessfully able to move, their turn is over
             if(check == true) {
                 view.displayMessage("player is now working at ");
-                return false;
+                return true;
             }
             return true;
 
@@ -171,9 +198,8 @@ public class Moderator {
                 view.displayMessage("Must \"work\" a role before acting");
                 return true;
             }
-            // work();
             
-            return false;
+            return act(playerList[currentPlayer]);
 
         } 
         else if (command.get(0).equals("rehearse")) {
@@ -183,9 +209,7 @@ public class Moderator {
                 return true;
             }
             
-            // work();
-            
-            return false;
+            return rehearse(playerList[currentPlayer]);
 
         }  
         else if (command.get(0).equals("upgrade")) {
@@ -271,7 +295,11 @@ public class Moderator {
             return false;
         }
 
-        // check if role is taken or if player rank is too low
+        // check if the scene is wrapped, role is taken, or if player rank is too low
+        if(role.getScene().getStatus().equals("wrapped")) {
+            view.displayMessage("the scene for this room has been wrapped");
+            return false;
+        }
         if(role.getActor() != null) {
             view.displayMessage("This role is already taken");
             return false;
@@ -336,6 +364,132 @@ public class Moderator {
         } catch (NumberFormatException e) {
             view.displayMessage("Invalid number format: " + parts[0]);
             return true;
+        }
+    }
+
+    private boolean act(Player player) {
+        Dice dice = new Dice();
+        int diceRoll = dice.roll();
+        Role role = player.getRole();
+        Scene scene = role.getScene();
+        if((diceRoll + role.getPracticeChips()) < scene.getBudget()) {
+            view.displayMessage("you rolled a " + diceRoll + " the budget was " + role.getRankToAct() + " better luck next time");
+        }
+        int shots = scene.getShotCounter();
+        scene.setShotCounter(shots-1);
+        if(role.getOnCard() == true) {
+            if(diceRoll < scene.getBudget()) {
+                return false;
+            }
+            int currentCredits = player.getCredits();
+            player.addCredits(currentCredits + 2);
+        } else {
+            int currentDollars = player.getDollars();
+            if(diceRoll < scene.getBudget()) {
+                player.addDollars(currentDollars + 1);
+                return false;
+            }
+            int currentCredits = player.getCredits();
+            player.addCredits(currentCredits + 1);
+            player.addDollars(currentDollars + 1);
+        }
+        if(shots-1 == 0) {
+            sceneWrap(scene, player);
+        }
+        return false;
+    }
+
+    private boolean rehearse(Player player) {
+        Role role = player.getRole();
+        int chips = role.getPracticeChips();
+        if(chips < role.getScene().getBudget()) {
+            role.setPracticeChips(chips + 1);
+            return false;
+        }
+        view.displayMessage("You already have the max amount of practice chips, please act");
+        return true;
+        
+    }
+
+    private void sceneWrap(Scene scene, Player activePlayer) {
+        scene.setStatus("wrapped");
+        // for players on the card bonus money
+        boolean playerOnCard = false;
+        ArrayList<Player> onCardPlayers = new ArrayList<>();
+        for(int i = 0; i < scene.getRoles().length; i++) {
+            if(scene.getRoles()[i].getActor() != null) {
+                playerOnCard = true;
+                onCardPlayers.add(scene.getRoles()[i].getActor());
+            }
+        }
+
+        // on card bonuses
+        if(playerOnCard) {
+            int[] rolls = new int[scene.getBudget()];
+            view.displayMessage("active player gets to roll " + scene.getBudget() + " dice");
+
+            Dice dice = new Dice();
+            // get and sort the rolls
+            for(int i = 0; i < scene.getBudget(); i++) {
+                int value = dice.roll();
+                view.displayMessage("you rolled a " + value);
+                rolls[i] = value;
+            }
+            Arrays.sort(rolls); 
+            reverseArray(rolls);
+            
+            // calculate the payout for each roll
+            int[] payout = new int[scene.getRoles().length];
+            for(int i = 0; i < scene.getBudget(); i++) {
+                payout[i % payout.length] += rolls[i];
+            }
+
+            // pay the players
+            for(int i = 0; i < payout.length; i++) {
+                if(scene.getRoles()[i].getActor() != null) {
+                    int currentDollars = scene.getRoles()[i].getActor().getDollars();
+                    scene.getRoles()[i].getActor().setDollars(currentDollars + payout[(payout.length - i - 1)]);
+                }
+            }
+        }
+
+        // off card bonuses
+        if(playerOnCard) {
+            Set offCard = (Set) activePlayer.getLocation();
+            for(int i = 0; i < offCard.getRoles().length; i++) {
+                if(offCard.getRoles()[i].getActor() != null) {
+                    int currentDollars = offCard.getRoles()[i].getActor().getDollars();
+                    offCard.getRoles()[i].getActor().setDollars(currentDollars + offCard.getRoles()[i].getRankToAct());
+                }
+            }
+        }
+
+        // loop through all of the rooms and see if their scenes are wrapped
+        int counter = 0;
+        for(int i = 0; i < 10; i++) {
+            Set set = (Set) board.getRooms()[i];
+            Scene allScenes = set.getScene();
+            // if a scene is not wrapped add to counter
+            if(allScenes.getStatus().equals("wrapped") != true) {
+                counter++;
+            }
+        }
+        if(counter == 1) {
+            //start a new day
+            startDay(sceneList, playerList);
+        }
+    }
+
+    // Method to reverse an array in-place
+    private static void reverseArray(int[] arr) {
+        int left = 0, right = arr.length - 1;
+        while (left < right) {
+            // Swap left and right elements
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
         }
     }
 }
