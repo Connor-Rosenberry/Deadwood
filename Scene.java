@@ -1,5 +1,3 @@
-import java.util.Set;
-
 public class Scene {
     // VARIABLES
     private int id;
@@ -130,15 +128,5 @@ public class Scene {
             names[i] = roles[i].getName();
         }
         return names;
-    }
-
-    // set up a scene on the board
-    public void setScene(Set set) {
-
-    }
-
-    // end a scene and clean up
-    public void wrapScene() {
-
     }
 }
