@@ -26,6 +26,15 @@ public class Moderator {
         playerList = new Player[numPlayers];
         
         // create "numPlayers" number of players
+
+
+
+
+
+        // TODO make so the players go in a random order
+
+
+
         for(int i = 0; i < numPlayers; i++) {
             view.displayMessage("what is player " + (i + 1) + "'s name?");
             String input = view.getUserInput();
@@ -37,7 +46,7 @@ public class Moderator {
             if(numPlayers == 6) {
                 player.setCredits(4);
             }
-            if(numPlayers <= 7) {
+            if(numPlayers >= 7) {
                 player.setRank(2);
             }
         }
@@ -69,20 +78,17 @@ public class Moderator {
             // Move to the next player after their turn ends
             currentPlayer = (currentPlayer + 1) % playerList.length;
             playerList[currentPlayer].setHasMoved(false);
-
-            // if(dayOver) {
-                // start new day
-            // }
         }
+        endGame();
     }
 
     // start a new day, clear the board and set new scenes
     public Scene[] startDay(Scene[] sceneList, Player[] playerList) {
         if(daycount == 4) {
-            //end game
+            endGame();
         }
         if(playerList.length <= 3 && daycount == 3) {
-            // end game
+            endGame();
         }
         // clear board, and assign 10 new rooms
         Random rand = new Random();
@@ -491,5 +497,22 @@ public class Moderator {
             left++;
             right--;
         }
+    }
+
+    private void endGame() {
+        int winningPlayer = 0;
+        int winningScore = 0;
+        // player with highest score wins, if tie, player who started last wins
+        for(int i = 0; i < playerList.length; i++) {
+            int dollars = playerList[0].getDollars();
+            int credits = playerList[0].getCredits();
+            int rank = playerList[0].getRank();
+            int score = dollars + credits + (rank * 5);
+            if(score >= winningScore) {
+                winningScore = score;
+                winningPlayer = i;
+            }
+        }
+        view.displayMessage("The winner is " + playerList[winningPlayer].getName() + " with a score of " + winningScore);
     }
 }
