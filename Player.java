@@ -81,26 +81,4 @@ public class Player {
     public void setHasMoved(boolean set) {
         this.hasMoved = set;
     }
-
-    // might be in moderator class below
-    public void move(Room location) {
-
-    }
-    public void upgrade(int rank) {
-
-    }
-    public void takeRole(Role role) {
-    
-    }
-    public void workRole() {
-
-    }
-    private void act() {
-
-    }
-    private void rehearse() {
-
-    }
-
-
 }
