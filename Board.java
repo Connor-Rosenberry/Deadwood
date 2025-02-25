@@ -17,6 +17,4 @@ public class Board {
     public void setRooms(Room[] rooms) {
         this.rooms = rooms;
     }
-    
-    public void clearBoard(){}
 }
