@@ -56,11 +56,6 @@ public class Set extends Room  {
     }
 
     // METHODS
-    // TODO
-    public void clearScene() {
-
-    }
-
     // return the names of all roles on this set
     public String[] getRoleNames() {
         String[] names = new String[roles.length];
