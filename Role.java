@@ -153,16 +153,6 @@ public class Role {
     }
 
     // METHODS
-    // #TODO
-    public void takeRole(Player player) {
-
-    }
-
-    // #TODO
-    public void finishRole() {
-
-    }
-
     public void addPracticeChip() {
         this.practiceChips++;
     }
