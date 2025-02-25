@@ -87,16 +87,6 @@ public class Room {
     }
 
     // METHODS
-    // TODO
-    public void movePlayerHere(Player player) {
-
-    }
-
-    // TODO
-    public void movePlayerOut(Player player) {
-
-    }
-
     public boolean isSet() {
         return false;
     }
