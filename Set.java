@@ -60,7 +60,7 @@ public class Set extends Room  {
     public String[] getRoleNames() {
         String[] names = new String[roles.length];
         for(int i = 0; i < roles.length; i++) {
-            names[i] = roles[i].getName();
+            names[i] = roles[i].getName() + ", rank required " + roles[i].getRankToAct();
         }
         return names;
     }

@@ -5,8 +5,6 @@ public class Player {
     private int dollars;
     private int credits;
     private Role role;
-
-    // added
     private boolean hasMoved;
 
     public Player(String name) {
