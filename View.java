@@ -6,10 +6,12 @@ public class View {
         System.out.println("Welcome to Deadwood!");
     }
 
+    // display a message to the user
     public void displayMessage(String message) {
         System.out.println(message);
     }
 
+    // get input from the user
     public String getUserInput() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
