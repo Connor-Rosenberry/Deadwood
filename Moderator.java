@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -592,23 +593,35 @@ public class Moderator {
         }
     }
 
-    // ends the loop and performs scoring
     private void endGame() {
-        int winningPlayer = 0;
-        int winningScore = 0;
-        
-        // player with highest score wins
-        for(int i = 0; i < playerList.length; i++) {
-            int dollars = playerList[0].getDollars();
-            int credits = playerList[0].getCredits();
-            int rank = playerList[0].getRank();
-            int score = dollars + credits + (rank * 5);
-            if(score >= winningScore) {
-                winningScore = score;
-                winningPlayer = i;
-            }
+    List<Player> winners = new ArrayList<>();
+    int winningScore = 0;
+
+    // Determine the highest score
+    for (Player player : playerList) {
+        int dollars = player.getDollars();
+        int credits = player.getCredits();
+        int rank = player.getRank();
+        int score = dollars + credits + (rank * 5);
+
+        if (score > winningScore) {
+            winningScore = score;
+            winners.clear(); // Clear previous winners
+            winners.add(player);
+        } else if (score == winningScore) {
+            winners.add(player); // Add to winners list in case of a tie
         }
-        view.displayMessage("The winner is " + playerList[winningPlayer].getName() + " with a score of " + winningScore);
-        return;
     }
+
+    // Display the winner(s)
+    if (winners.size() == 1) {
+        view.displayMessage("The winner is " + winners.get(0).getName() + " with a score of " + winningScore);
+    } else {
+        String winnerNames = winners.stream()
+                                    .map(Player::getName)
+                                    .collect(Collectors.joining(", "));
+        view.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
+    }
+}
+
 }
