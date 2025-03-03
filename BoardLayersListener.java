@@ -142,3 +142,11 @@ public class BoardLayersListener extends JFrame {
     JOptionPane.showInputDialog(board, "How many players?"); 
   }
 }
+
+/* JAVASWING NOTES:
+ - JFrame: the main window
+ - JPanel: container for holding/organizing components
+ - JButton/JLabel/JTextField: GUI elements
+ - Layout Managers: controls the arrangment of components
+ - Event Listeners: handles user interactions
+ */
