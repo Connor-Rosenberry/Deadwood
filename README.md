@@ -3,12 +3,13 @@ Implementation of the board game deadwood into a computer game
 
 for instructions on how the game works check "deadwood-free-edition-rules.pdf"
 
-In Order to compile and run this porgram successfully Please:
+In Order to compile and run the tui version of this porgram successfully Please:
   1. Download all files from the github repository
-  2. Compile all of the .java files (javac)
-  3. Run the Deadwood.java file (java Deadwood.java)
-  4. Enter the number of players
-  5. Enjoy the game
+  2. change the current directory to the "tui" folder
+  3. Compile all of the .java files (javac *.java) in the tui folder
+  4. Run the Deadwood.java file (java Deadwood.java)
+  5. Enter the number of players
+  6. Enjoy the game
 
 # Commands
 - move <destination>: move the active player to an adjacent room
