@@ -14,8 +14,9 @@ import javax.imageio.ImageIO;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
 
+// View: handles UI
+// JFrame: main window
 public class BoardLayersListener extends JFrame {
-
   // JLabels
   JLabel boardlabel;
   JLabel cardlabel;
