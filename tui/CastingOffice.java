@@ -1,3 +1,5 @@
+package tui;
+
 public class CastingOffice extends Room {
     //  VARIABLES
     private Rank[] ranks;

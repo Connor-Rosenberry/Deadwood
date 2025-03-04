@@ -1,3 +1,5 @@
+package gui;
+
 public class Set extends Room  {
     //  VARIABLES
     private String status;

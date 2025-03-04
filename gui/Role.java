@@ -1,3 +1,5 @@
+package gui;
+
 public class Role {
     // VARIABLES
     private String name;

@@ -1,3 +1,5 @@
+package tui;
+
 public class Rank {
     //  VARIABLES
     private int rankLevel;

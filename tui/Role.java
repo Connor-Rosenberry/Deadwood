@@ -1,3 +1,5 @@
+package tui;
+
 public class Role {
     // VARIABLES
     private String name;

@@ -1,3 +1,5 @@
+package tui;
+
 public class Scene {
     // VARIABLES
     private int id;

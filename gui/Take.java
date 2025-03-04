@@ -1,3 +1,5 @@
+package gui;
+
 public class Take {
     // VARIABLES
     private int number;

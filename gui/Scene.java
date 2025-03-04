@@ -1,3 +1,5 @@
+package gui;
+
 public class Scene {
     // VARIABLES
     private int id;

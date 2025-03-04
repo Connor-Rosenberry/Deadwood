@@ -1,3 +1,5 @@
+package tui;
+
 public class Take {
     // VARIABLES
     private int number;

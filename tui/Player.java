@@ -1,3 +1,5 @@
+package tui;
+
 public class Player {
     private String name;
     private Room location;
@@ -79,4 +81,5 @@ public class Player {
     public void setHasMoved(boolean set) {
         this.hasMoved = set;
     }
+
 }

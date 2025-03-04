@@ -1,3 +1,5 @@
+package gui;
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -223,7 +225,12 @@ public class Moderator {
                 view.displayMessage("Must \"work\" a role before acting");
                 return true;
             }
-            return act(playerList[currentPlayer]);
+            boolean response = playerList[currentPlayer].act(view);
+            if(response == true) {
+                sceneWrap(playerList[currentPlayer].getRole().getScene(), playerList[currentPlayer]);
+            }
+
+            return false;
 
         } 
         else if (command.get(0).equals("rehearse")) {
@@ -434,48 +441,6 @@ public class Moderator {
             view.displayMessage("Invalid number format: " + parts[0]);
             return true;
         }
-    }
-
-    // validate that the player meets the requirements to act and then perform action
-    private boolean act(Player player) {
-        Dice dice = new Dice();
-        int diceRoll = dice.roll();
-        Role role = player.getRole();
-        Scene scene = role.getScene();
-        
-        // role dice to act
-        if((diceRoll + role.getPracticeChips()) < scene.getBudget()) {
-            view.displayMessage("you rolled a " + diceRoll + " and have " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget() + " better luck next time");
-            return false;
-        }
-
-        view.displayMessage("Congratulations you rolled a " + diceRoll + " and have + " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget());
-
-        // if success then remove shot counter
-        int shots = scene.getShotCounter();
-        scene.setShotCounter(shots-1);
-        view.displayMessage("This scene has " + scene.getShotCounter() + " shots left");
-        
-        // if scene is over then wrap it
-        if(shots-1 == 0) {
-            sceneWrap(scene, player);
-        }
-        
-        // otherwise pay player based on on vs off card roles
-        if(role.getOnCard() == true) {
-            if(diceRoll < scene.getBudget()) {
-                return false;
-            }
-            player.addCredits(2);
-        } else {
-            if(diceRoll < scene.getBudget()) {
-                player.addDollars(1);
-                return false;
-            }
-            player.addCredits(1);
-            player.addDollars(1);
-        }
-        return false;
     }
 
     // validate that the player meets the requirements to rehearse and then perform action

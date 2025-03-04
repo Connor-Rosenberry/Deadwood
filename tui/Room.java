@@ -1,3 +1,5 @@
+package tui;
+
 public class Room {
     //  VARIABLES
     protected String name;

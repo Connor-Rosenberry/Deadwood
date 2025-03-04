@@ -1,3 +1,5 @@
+package gui;
+
 public class Player {
     private String name;
     private Room location;
@@ -78,5 +80,46 @@ public class Player {
 
     public void setHasMoved(boolean set) {
         this.hasMoved = set;
+    }
+
+    // 
+
+    // validate that the player meets the requirements to act and then perform action false = end turn, true = scene wrap
+    public Boolean act(View view) {
+        Dice dice = new Dice();
+        int diceRoll = dice.roll();
+        Role role = getRole();
+        Scene scene = role.getScene();
+        
+        // role dice to act
+        if((diceRoll + role.getPracticeChips()) < scene.getBudget()) {
+            view.displayMessage("you rolled a " + diceRoll + " and have " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget() + " better luck next time");
+            if(role.getOnCard() == false) {
+                addDollars(1);
+            }
+            return false;
+        }
+
+        view.displayMessage("Congratulations you rolled a " + diceRoll + " and have + " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget());
+
+        // if success then remove shot counter
+        int shots = scene.getShotCounter();
+        scene.setShotCounter(shots-1);
+        view.displayMessage("This scene has " + scene.getShotCounter() + " shots left");
+        
+        // pay the player
+        if(role.getOnCard() == true) {
+            addCredits(2);
+        } else {
+            addCredits(1);
+            addDollars(1);
+        }
+
+        // if scene is over then wrap it
+        if(shots-1 == 0) {
+            return true;
+        }
+
+        return false;
     }
 }

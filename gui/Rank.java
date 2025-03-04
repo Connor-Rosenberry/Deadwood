@@ -1,3 +1,5 @@
+package gui;
+
 public class Rank {
     //  VARIABLES
     private int rankLevel;

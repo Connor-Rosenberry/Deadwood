@@ -1,3 +1,5 @@
+package gui;
+
 public class Board {
     //  VARIABLES
     private Room[] rooms;

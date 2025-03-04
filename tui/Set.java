@@ -1,3 +1,5 @@
+package tui;
+
 public class Set extends Room  {
     //  VARIABLES
     private String status;
