@@ -23,15 +23,19 @@ public class BoardLayersListener extends JFrame {
   JLabel mLabel;
   
   //JButtons
-  JButton bAct;
-  JButton bRehearse;
-  JButton bMove;
+  JButton bAct;  // act
+  JButton bRehearse;  // rehearse
+  JButton bMove;  // move
+  JButton bUpgrade;  // TODO upgrade (?)
+  JButton bEndTurn;  // TODO end turn
+  JButton bEndGame;  // TODO end game
+
   
   // JLayered Pane
   JLayeredPane bPane;
   
+
   // Constructor
-  
   public BoardLayersListener() {
       
        // Set the title of the JFrame
@@ -104,8 +108,8 @@ public class BoardLayersListener extends JFrame {
        bPane.add(bMove, 2);
   }
   
+
   // This class implements Mouse Events
-  
   class boardMouseListener implements MouseListener{
   
       // Code for the different button clicks
@@ -122,12 +126,16 @@ public class BoardLayersListener extends JFrame {
             System.out.println("Move is Selected\n");
          }         
       }
+
       public void mousePressed(MouseEvent e) {
       }
+
       public void mouseReleased(MouseEvent e) {
       }
+
       public void mouseEntered(MouseEvent e) {
       }
+
       public void mouseExited(MouseEvent e) {
       }
    }
