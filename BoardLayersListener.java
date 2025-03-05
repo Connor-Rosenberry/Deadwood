@@ -27,9 +27,6 @@ public class BoardLayersListener extends JFrame {
   JButton bAct;  // act
   JButton bRehearse;  // rehearse
   JButton bMove;  // move
-  JButton bUpgrade;  // TODO upgrade (?)
-  JButton bEndTurn;  // TODO end turn
-  JButton bEndGame;  // TODO end game
 
   
   // JLayered Pane
