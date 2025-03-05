@@ -6,7 +6,7 @@ for instructions on how the game works check "deadwood-free-edition-rules.pdf"
 In Order to compile and run the tui version of this porgram successfully Please:
   1. Download all files from the github repository
   3. Compile all of the .java files (javac tui/*.java) in the tui folder
-  4. Run the Deadwood.java file (java tui.Deadwood.java)
+  4. Run the Deadwood.java file (java tui.Deadwood)
   5. Enter the number of players
   6. Enjoy the game
 
