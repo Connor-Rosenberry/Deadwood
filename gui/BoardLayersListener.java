@@ -20,6 +20,7 @@ public class BoardLayersListener extends JFrame {
    private static JLabel playerLabel;
    private static JLabel playerDataLabel;  // player data box
    private static JLabel[] activeCardLabels;
+   private static JLabel[][] activeTakeLabels = new JLabel[10][];  // an array per set
 
    // JPanels
    // containers that hold groups of components
@@ -206,7 +207,7 @@ public class BoardLayersListener extends JFrame {
       boardPane.add(boardLabel, 0);
 
       // set 10 scene cards on the board
-      setSceneCards(getSampleScenes(), getSampleSets());
+      activeCardLabels = setSceneCards(getSampleScenes(), getSampleSets());
 
       // Add a dice to represent a player. 
       // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
@@ -254,18 +255,50 @@ public class BoardLayersListener extends JFrame {
          cardLabels[i] = cardLabel;
          
          // set up the takes on the board
-         setTakes(sets[i].getTakes());
+         activeTakeLabels[i] = setTakes(sets[i].getTakes());
       }
       return cardLabels;
    }
 
-   // TODO -- clean scene cards from board (GUI ONLY)
+   // clean scene cards from board (GUI ONLY)
    public static void removeSceneCards(JLabel[] cardLabels) {
       // for each set
       for (int i = 0; i < 10; i++) {
          boardPane.remove(cardLabels[i]);
       }
-      // also call clear takes here
+      boardPane.revalidate();
+      boardPane.repaint();
+      return;
+   }
+
+   // removes scene cards AND takes, ideally always call this one
+   public static void removeSceneCards(JLabel[] cardLabels, JLabel[][]takeLabels) {
+      // for each set
+      for (int i = 0; i < 10; i++) {
+         boardPane.remove(cardLabels[i]);
+         clearTakes(takeLabels[i]);
+      }
+      boardPane.revalidate();
+      boardPane.repaint();
+      return;
+   }
+
+   // remove just one scene card AND its takes, from the given JLabel
+   public static void removeSceneCards(JLabel cardLabel) {
+      boardPane.remove(cardLabel);
+
+      boardPane.revalidate();
+      boardPane.repaint();
+      return;
+   }
+
+   // remove just one scene card AND its takes, from the given JLabel
+   public static void removeSceneCards(JLabel cardLabel, JLabel[]takeLabels) {
+      boardPane.remove(cardLabel);
+      clearTakes(takeLabels);
+
+      boardPane.revalidate();
+      boardPane.repaint();
       return;
    }
 
@@ -293,15 +326,37 @@ public class BoardLayersListener extends JFrame {
       return takeLabels;
    }
 
-   // TODO -- for the given Set, remove one of the takes
+   // remove one of the takes for the set associated w takes (shot counter)
    // WARNING: does not error check for if there are no more shots to remove
-   public static void removeTake(JLabel[] takeLabels) {
+   // returns updated JLabel (where shot is removed from)
+   public static JLabel[] removeTake(JLabel[] takeLabels) {
+      // if necessary, get to the take that needs to be deleted
+      int i = takeLabels.length - 1;  // xml puts takes in backwards order
+      while (i >= 0 && takeLabels[i] == null) {
+         i--;
+      }
+      if (i >= 0) {
+         // there is a take to remove
+         boardPane.remove(takeLabels[i]);
+         takeLabels[i] = null;  // set to null as it has been deleted
+      }
 
+      boardPane.revalidate();
+      boardPane.repaint();
+      return takeLabels;
    }
 
-   // TODO -- removes all takes from the given set
-   public static void clearShots(JLabel[] takeLabels) {
-
+   // removes all takes from the given set
+   public static void clearTakes(JLabel[] takeLabels) {
+      // for each set
+      for (int i = 0; i < takeLabels.length; i++) {
+         if (takeLabels[i] != null) {
+            boardPane.remove(takeLabels[i]);
+         }
+      }
+      boardPane.revalidate();
+      boardPane.repaint();
+      return;
    }
   
    // END OF CONSTRUCTOR (and helpers)
@@ -378,5 +433,11 @@ public class BoardLayersListener extends JFrame {
     
       // Take input from the user about number of players
       numPlayers = playerSelection();
+
+      // example of how to remove a single take
+      // removeTake(activeTakeLabels[0]);
+
+      // example of how to remove takes and labels
+      removeSceneCards(activeCardLabels, activeTakeLabels);
    }
 }
