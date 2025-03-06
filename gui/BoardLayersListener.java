@@ -284,7 +284,12 @@ public class BoardLayersListener extends JFrame {
    }
 
    // remove just one scene card AND its takes, from the given JLabel
+   // NOTE: be careful to track what scenes have already been removed
    public static void removeSceneCards(JLabel cardLabel) {
+      if (cardLabel == null) {
+         // for array/loop handling, no card to remove
+         return;
+      }
       boardPane.remove(cardLabel);
 
       boardPane.revalidate();
@@ -293,7 +298,14 @@ public class BoardLayersListener extends JFrame {
    }
 
    // remove just one scene card AND its takes, from the given JLabel
+   // NOTE: be careful to track what scenes have already been removed
    public static void removeSceneCards(JLabel cardLabel, JLabel[]takeLabels) {
+      if (cardLabel == null) {
+         // for array/loop handling, no card to remove
+         clearTakes(takeLabels);
+         return;
+      }
+      
       boardPane.remove(cardLabel);
       clearTakes(takeLabels);
 
@@ -347,7 +359,12 @@ public class BoardLayersListener extends JFrame {
    }
 
    // removes all takes from the given set
+   // NOTE: be careful to track what scenes have already been removed
    public static void clearTakes(JLabel[] takeLabels) {
+      if (takeLabels == null) {
+         // no takes to clear
+         return;
+      }
       // for each set
       for (int i = 0; i < takeLabels.length; i++) {
          if (takeLabels[i] != null) {
