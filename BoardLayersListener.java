@@ -20,27 +20,31 @@ public class BoardLayersListener extends JFrame {
    JLabel cardLabel;
    JLabel playerLabel;
    JLabel mLabel;
+   JLabel playerDataLabel;
 
    // JPanels
    // containers that hold groups of components
    JPanel boardPanel;
    JPanel consolePanel;
    JPanel buttonPanel;
+   JPanel playerDataPanel;
   
    //JButtons
    JButton bAct;  // act
    JButton bRehearse;  // rehearse
    JButton bMove;  // move
-   // upgrade
-   // take role
-   // end turn
-   // end game
+   JButton bUpgrade;  // upgrade
+   JButton bTakeRole;  // take role
+   JButton bEndTurn;  // end turn
+   JButton bEndGame;  // end game
 
    // JLayered Pane
    JLayeredPane bPane;
 
    // JSplitPane
    JSplitPane splitPane;
+   JSplitPane consoleSplitPane;  // console + button split
+   JSplitPane dataSplitPane;  // all data to the right of board
 
    // JTextArea
    JTextArea consoleArea;  // the console
@@ -71,7 +75,7 @@ public class BoardLayersListener extends JFrame {
       bPane.add(boardLabel, 0);
       
       // Set the size of the GUI
-      setSize(icon.getIconWidth() + 400, icon.getIconHeight());
+      setSize(icon.getIconWidth() + 400, icon.getIconHeight() + 50);
       
       // Add a scene card to this room
       cardLabel = new JLabel();
@@ -97,6 +101,7 @@ public class BoardLayersListener extends JFrame {
       bPane.add(playerLabel, 3);
 
 
+      // DATA TO THE RIGHT OF BOARD SETUP
       // create the console
       consolePanel = new JPanel();
       consolePanel.setLayout(new BorderLayout());
@@ -107,38 +112,68 @@ public class BoardLayersListener extends JFrame {
       // create button panel
       buttonPanel = new JPanel();
       // adjust the grid layout based on num of buttons
-      buttonPanel.setLayout(new GridLayout(2, 4));
+      buttonPanel.setLayout(new GridLayout(2, 7));
 
       // create player buttons
-      bAct = new JButton("ACT");
+      // act
+      bAct = new JButton("Act");
       bAct.setBackground(Color.white);
-      bAct.setBounds(icon.getIconWidth() + 10, 30, 100, 20);
       bAct.addMouseListener(new boardMouseListener());
         
-      bRehearse = new JButton("REHEARSE");
+      // rehearse
+      bRehearse = new JButton("Rehearse");
       bRehearse.setBackground(Color.white);
-      bRehearse.setBounds(icon.getIconWidth() + 10, 60, 100, 20);
       bRehearse.addMouseListener(new boardMouseListener());
         
-      bMove = new JButton("MOVE");
+      // move
+      bMove = new JButton("Move");
       bMove.setBackground(Color.white);
-      bMove.setBounds(icon.getIconWidth() + 10, 90, 100, 20);
       bMove.addMouseListener(new boardMouseListener());
+
+      // upgrade
+      bUpgrade = new JButton("Upgrade");
+      bUpgrade.setBackground(Color.white);
+      bUpgrade.addMouseListener(new boardMouseListener());
+
+      // take role
+      bTakeRole = new JButton("Take Role");
+      bTakeRole.setBackground(Color.white);
+      bTakeRole.addMouseListener(new boardMouseListener());
+
+      // end turn
+      bEndTurn = new JButton("End Turn");
+      bEndTurn.setBackground(Color.white);
+      bEndTurn.addMouseListener(new boardMouseListener());
+
+      // end game
+      bEndGame = new JButton("End Game");
+      bEndGame.setBackground(Color.white);
+      bEndGame.addMouseListener(new boardMouseListener());
  
       // Place the action buttons in the top layer
-      bPane.add(bAct, 2);
-      bPane.add(bRehearse, 2);
-      bPane.add(bMove, 2);
+      buttonPanel.add(bAct);
+      buttonPanel.add(bRehearse);
+      buttonPanel.add(bMove);
 
-      // add buttonPanel to the bottom of consolePanel
-      consolePanel.add(buttonPanel, BorderLayout.SOUTH);
+      // create the player data panel
+      playerDataPanel = new JPanel();
+      playerDataPanel.setLayout(new BorderLayout());
+      playerDataLabel = new JLabel("Player Data");
+      playerDataPanel.add(playerDataLabel, BorderLayout.CENTER);
+
+      // create a vertical split pane for console + buttons
+      consoleSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, consolePanel, buttonPanel);
+      consoleSplitPane.setDividerLocation(400);
+      consoleSplitPane.setResizeWeight(0.8);
+
+      // create a vertical split pane for console/buttons + playerData
+      dataSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, consoleSplitPane, playerDataPanel);
+      dataSplitPane.setDividerLocation(600);
 
       // create a split pane to hold the board + console panels
-      splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, boardPanel, consolePanel);
+      splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, boardPanel, dataSplitPane);
       // set the split location between the board and console/buttons
       splitPane.setDividerLocation(icon.getIconWidth());
-
-
 
       add(splitPane);  // add the split pane to the frame
       setVisible(true);  // show the frame
@@ -151,16 +186,28 @@ public class BoardLayersListener extends JFrame {
       // Code for the different button clicks
       public void mouseClicked(MouseEvent e) {
          
-         if (e.getSource()== bAct){
+         if (e.getSource() == bAct) {
             playerLabel.setVisible(true);
-            System.out.println("Acting is Selected\n");
+            System.out.println("Act selected\n");
          }
-         else if (e.getSource()== bRehearse){
-            System.out.println("Rehearse is Selected\n");
+         else if (e.getSource() == bRehearse) {
+            System.out.println("Rehearse selected\n");
          }
-         else if (e.getSource()== bMove){
-            System.out.println("Move is Selected\n");
-         }         
+         else if (e.getSource() == bMove) {
+            System.out.println("Move selected\n");
+         }
+         else if (e.getSource() == bUpgrade) {
+            System.out.println("Upgrade selected\n");
+         }
+         else if (e.getSource() == bTakeRole) {
+            System.out.println("Take Role selected\n");
+         }
+         else if (e.getSource() == bEndTurn) {
+            System.out.println("End turn selected\n");
+         }
+         else if (e.getSource() == bEndGame) {
+            System.out.println("End game selected\n");
+         }
       }
 
       public void mousePressed(MouseEvent e) {
