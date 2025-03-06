@@ -174,17 +174,18 @@ public class BoardLayersListener extends JFrame {
       cardLabel.setOpaque(true);
             
       // Add the card to the lower layer
-      boardPane.add(cardLabel, 1);
+      boardPane.add(cardLabel, Integer.valueOf(1));
 
       // Add a dice to represent a player. 
       // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
       playerLabel = new JLabel();
       ImageIcon pIcon = new ImageIcon("img/dice/r2.png");
       playerLabel.setIcon(pIcon);
-      //playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());  
-      playerLabel.setBounds(114,227,46,46);
-      playerLabel.setVisible(false);
-      boardPane.add(playerLabel, 3);
+      playerLabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());  
+      //playerLabel.setBounds(114,227,46,46);
+      playerLabel.setVisible(true);
+
+      boardPane.add(playerLabel, Integer.valueOf(3));
 
       // revalidate and repaint to make sure components are displayed
       boardPane.revalidate();
