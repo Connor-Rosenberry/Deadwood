@@ -8,13 +8,15 @@ import java.util.List;
 
 public class Moderator {
     private Board board;
+    private BoardLayersListener boardView;
     private View view;
     private boolean gameRunning;
     private Scene[] sceneList;
     private Player[] playerList;
     private int dayCount;
 
-    public Moderator(Board board, View view) {
+    public Moderator(BoardLayersListener boardView, Board board, View view) {
+        this.boardView = boardView;
         this.board = board;
         this.view = view;
         this.gameRunning = true;

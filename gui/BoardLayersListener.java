@@ -1,20 +1,48 @@
 package gui;
 
+<<<<<<< HEAD
+/*
+
+   Deadwood GUI helper file
+   Author: Moushumi Sharmin
+   This file shows how to create a simple GUI using Java Swing and Awt Library
+   Classes Used: JFrame, JLabel, JButton, JLayeredPane
+
+*/
+
+=======
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
 import java.awt.*;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
+<<<<<<< HEAD
+=======
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.List;
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
 
 // View: handles UI
 // JFrame: main window
 public class BoardLayersListener extends JFrame {
    // TODO data to take out of this class and move into the game initgration
    // temp storing here while setting up GUI
+<<<<<<< HEAD
+   static int numPlayers;
+   
+   // JLabels
+   private static JLabel boardLabel;  // the gameboard
+   private static JLabel cardLabel;
+   private static JLabel playerLabel;
+   private static JLabel playerDataLabel;
+
+   // JPanels
+   // containers that hold groups of components
+   private static JPanel boardPanel;
+=======
    public static int numPlayers;
    
    // JLabels
@@ -25,6 +53,7 @@ public class BoardLayersListener extends JFrame {
 
    // JPanels
    // containers that hold groups of components
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
    private static JPanel consolePanel;
    private static JPanel buttonPanel;
    private static JPanel playerDataPanel;
@@ -59,7 +88,11 @@ public class BoardLayersListener extends JFrame {
       super("Deadwood");
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
+<<<<<<< HEAD
+      
+=======
 
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
       // Create the JLayeredPane to hold the display, cards, dice and buttons
       bPane = getLayeredPane();
     
@@ -151,6 +184,9 @@ public class BoardLayersListener extends JFrame {
       setVisible(true);  // show the frame
    }
 
+<<<<<<< HEAD
+   // constructor helper: setting up the board
+=======
    // TODO DELETE!! ONLY FOR TESTING
    private static Scene[] getSampleScenes() {
       SceneCreator createCard = new SceneCreator();
@@ -187,6 +223,7 @@ public class BoardLayersListener extends JFrame {
 
    // constructor helper: setting up the board
    // GUI ONLY
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
    private static void setUpBoard() {
       // create the board
       boardLabel = new JLabel();
@@ -198,8 +235,20 @@ public class BoardLayersListener extends JFrame {
       // add board label(image) to the lowest layer
       boardPane.add(boardLabel, 0);
 
+<<<<<<< HEAD
+      // Add a scene card to this room
+      cardLabel = new JLabel();
+      ImageIcon cIcon =  new ImageIcon("img/card/01.png");
+      cardLabel.setIcon(cIcon); 
+      cardLabel.setBounds(20,65,cIcon.getIconWidth()+2,cIcon.getIconHeight());
+      cardLabel.setOpaque(true);
+            
+      // Add the card to the lower layer
+      boardPane.add(cardLabel, Integer.valueOf(1));
+=======
       // set 10 scene cards on the board
       setSceneCards(getSampleScenes(), getSampleSets());
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
 
       // Add a dice to represent a player. 
       // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
@@ -216,6 +265,8 @@ public class BoardLayersListener extends JFrame {
       boardPane.revalidate();
       boardPane.repaint();
    }
+<<<<<<< HEAD
+=======
 
    // constructor helper: will randomly select 10 cards to set on the scene
    // scenes should ONLY contain the 10 scene cards that shall be place
@@ -274,6 +325,7 @@ public class BoardLayersListener extends JFrame {
    public static void clearShots(Set set, Take[] takes) {
 
    }
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
   
    // END OF CONSTRUCTOR (and helpers)
 
@@ -341,6 +393,8 @@ public class BoardLayersListener extends JFrame {
       }
       return selection;
    }
+<<<<<<< HEAD
+=======
 
    // FOR TESTING, acts as this classes main method
    public static void makeGUI() {
@@ -350,4 +404,5 @@ public class BoardLayersListener extends JFrame {
       // Take input from the user about number of players
       numPlayers = playerSelection();
    }
+>>>>>>> bbd136641140e74cfd448323a281532b6fb20bc7
 }
