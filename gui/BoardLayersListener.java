@@ -187,7 +187,7 @@ public class BoardLayersListener extends JFrame {
    private static void setUpBoard() {
       // create the board
       boardLabel = new JLabel();
-      board = new ImageIcon("img/board.jpg");
+      board = new ImageIcon("gui/img/board.jpg");
       boardLabel.setIcon(board); 
       boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight());
 
@@ -201,7 +201,7 @@ public class BoardLayersListener extends JFrame {
       // Add a dice to represent a player. 
       // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
       playerLabel = new JLabel();
-      ImageIcon pIcon = new ImageIcon("img/dice/r2.png");
+      ImageIcon pIcon = new ImageIcon("gui/img/dice/r2.png");
       playerLabel.setIcon(pIcon);
       playerLabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());  
       //playerLabel.setBounds(114,227,46,46);
@@ -225,7 +225,7 @@ public class BoardLayersListener extends JFrame {
       // for the 10 rooms that need scenes assign a scene
       for(int i = 0; i < 10; i++) {
          // get img file from
-         String filename = "img/card/" + scenes[i].getImg();
+         String filename = "gui/img/card/" + scenes[i].getImg();
          // get set card placement area
          int x = sets[i].getX();
          int y = sets[i].getY();
