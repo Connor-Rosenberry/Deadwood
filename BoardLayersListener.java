@@ -15,11 +15,14 @@ import java.awt.event.*;
 // View: handles UI
 // JFrame: main window
 public class BoardLayersListener extends JFrame {
+   // TODO data to take out of this class and move into the game initgration
+   // temp storing here while setting up GUI
+   static int numPlayers;
+   
    // JLabels
    private static JLabel boardLabel;  // the gameboard
    private static JLabel cardLabel;
    private static JLabel playerLabel;
-   private static JLabel mLabel;
    private static JLabel playerDataLabel;
 
    // JPanels
@@ -231,6 +234,25 @@ public class BoardLayersListener extends JFrame {
       consoleArea.append(message + "\n");
    }
 
+   // popup for inputing number players
+   public static int playerSelection() {
+      Integer[] options = {2, 3, 4, 5, 6, 7, 8};
+      // prompt user
+      Integer selection = (Integer) JOptionPane.showInputDialog(
+         null,
+         "How many players?",
+         "Player selection",
+         JOptionPane.QUESTION_MESSAGE,
+         null,
+         options,
+         options[0]);
+      if (selection == null) {
+         // player didn't select
+         return 2;  // default option
+      }
+      return selection;
+   }
+
 
    public static void main(String[] args) {
   
@@ -238,6 +260,7 @@ public class BoardLayersListener extends JFrame {
       board.setVisible(true);
     
       // Take input from the user about number of players
-      JOptionPane.showInputDialog(board, "How many players?"); 
+      numPlayers = playerSelection();
+      displayMessage("num players = " +numPlayers);
    }
 }
