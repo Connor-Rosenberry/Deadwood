@@ -16,38 +16,38 @@ import java.awt.event.*;
 // JFrame: main window
 public class BoardLayersListener extends JFrame {
    // JLabels
-   JLabel boardLabel;  // the gameboard
-   JLabel cardLabel;
-   JLabel playerLabel;
-   JLabel mLabel;
-   JLabel playerDataLabel;
+   private static JLabel boardLabel;  // the gameboard
+   private static JLabel cardLabel;
+   private static JLabel playerLabel;
+   private static JLabel mLabel;
+   private static JLabel playerDataLabel;
 
    // JPanels
    // containers that hold groups of components
-   JPanel boardPanel;
-   JPanel consolePanel;
-   JPanel buttonPanel;
-   JPanel playerDataPanel;
+   private static JPanel boardPanel;
+   private static JPanel consolePanel;
+   private static JPanel buttonPanel;
+   private static JPanel playerDataPanel;
   
    //JButtons
-   JButton bAct;  // act
-   JButton bRehearse;  // rehearse
-   JButton bMove;  // move
-   JButton bUpgrade;  // upgrade
-   JButton bTakeRole;  // take role
-   JButton bEndTurn;  // end turn
-   JButton bEndGame;  // end game
+   private static JButton bAct;  // act
+   private static JButton bRehearse;  // rehearse
+   private static JButton bMove;  // move
+   private static JButton bUpgrade;  // upgrade
+   private static JButton bTakeRole;  // take role
+   private static JButton bEndTurn;  // end turn
+   private static JButton bEndGame;  // end game
 
    // JLayered Pane
-   JLayeredPane bPane;
+   private static JLayeredPane bPane;
 
    // JSplitPane
-   JSplitPane splitPane;
-   JSplitPane consoleSplitPane;  // console + button split
-   JSplitPane dataSplitPane;  // all data to the right of board
+   private static JSplitPane splitPane;
+   private static JSplitPane consoleSplitPane;  // console + button split
+   private static JSplitPane dataSplitPane;  // all data to the right of board
 
    // JTextArea
-   JTextArea consoleArea;  // the console
+   private static JTextArea consoleArea;  // the console
   
 
    // Constructor
@@ -112,7 +112,7 @@ public class BoardLayersListener extends JFrame {
       // create button panel
       buttonPanel = new JPanel();
       // adjust the grid layout based on num of buttons
-      buttonPanel.setLayout(new GridLayout(2, 7));
+      buttonPanel.setLayout(new GridLayout(4, 2));
 
       // create player buttons
       // act
@@ -154,6 +154,10 @@ public class BoardLayersListener extends JFrame {
       buttonPanel.add(bAct);
       buttonPanel.add(bRehearse);
       buttonPanel.add(bMove);
+      buttonPanel.add(bUpgrade);
+      buttonPanel.add(bTakeRole);
+      buttonPanel.add(bEndTurn);
+      buttonPanel.add(bEndGame);
 
       // create the player data panel
       playerDataPanel = new JPanel();
@@ -184,29 +188,28 @@ public class BoardLayersListener extends JFrame {
    class boardMouseListener implements MouseListener{
   
       // Code for the different button clicks
-      public void mouseClicked(MouseEvent e) {
-         
+      public void mouseClicked(MouseEvent e) { 
          if (e.getSource() == bAct) {
             playerLabel.setVisible(true);
-            System.out.println("Act selected\n");
+            displayMessage("Act selected");
          }
          else if (e.getSource() == bRehearse) {
-            System.out.println("Rehearse selected\n");
+            displayMessage("Rehearse selected");
          }
          else if (e.getSource() == bMove) {
-            System.out.println("Move selected\n");
+            displayMessage("Move selected");
          }
          else if (e.getSource() == bUpgrade) {
-            System.out.println("Upgrade selected\n");
+            displayMessage("Upgrade selected");
          }
          else if (e.getSource() == bTakeRole) {
-            System.out.println("Take Role selected\n");
+            displayMessage("Take Role selected");
          }
          else if (e.getSource() == bEndTurn) {
-            System.out.println("End turn selected\n");
+            displayMessage("End turn selected");
          }
          else if (e.getSource() == bEndGame) {
-            System.out.println("End game selected\n");
+            displayMessage("End game selected");
          }
       }
 
@@ -221,6 +224,11 @@ public class BoardLayersListener extends JFrame {
 
       public void mouseExited(MouseEvent e) {
       }
+   }
+
+   // print messaged to the console
+   public static void displayMessage(String message) {
+      consoleArea.append(message + "\n");
    }
 
 
