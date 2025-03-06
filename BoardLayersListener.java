@@ -43,6 +43,7 @@ public class BoardLayersListener extends JFrame {
 
    // JLayered Pane
    private static JLayeredPane bPane;
+   private static JLayeredPane boardPane;
 
    // JSplitPane
    private static JSplitPane splitPane;
@@ -52,6 +53,8 @@ public class BoardLayersListener extends JFrame {
    // JTextArea
    private static JTextArea consoleArea;  // the console
   
+   // Images
+   private static ImageIcon board;  // board
 
    // Constructor
    public BoardLayersListener() {
@@ -64,45 +67,10 @@ public class BoardLayersListener extends JFrame {
       bPane = getLayeredPane();
     
       // Create the deadwood board
-      boardPanel = new JPanel();
-      boardPanel.setLayout(new BorderLayout());
-
-      boardLabel = new JLabel();
-      ImageIcon icon =  new ImageIcon("img/board.jpg");
-      boardLabel.setIcon(icon); 
-      boardLabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
-
-      boardPanel.add(boardLabel, BorderLayout.CENTER);
-      
-      // Add the board to the lowest layer
-      bPane.add(boardLabel, 0);
+      setUpBoard();
       
       // Set the size of the GUI
-      setSize(icon.getIconWidth() + 400, icon.getIconHeight() + 50);
-      
-      // Add a scene card to this room
-      cardLabel = new JLabel();
-      ImageIcon cIcon =  new ImageIcon("img/card/01.png");
-      cardLabel.setIcon(cIcon); 
-      cardLabel.setBounds(20,65,cIcon.getIconWidth()+2,cIcon.getIconHeight());
-      cardLabel.setOpaque(true);
-      
-      // Add the card to the lower layer
-      bPane.add(cardLabel, 1);
-       
-      
-
-    
-      // Add a dice to represent a player. 
-      // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
-      playerLabel = new JLabel();
-      ImageIcon pIcon = new ImageIcon("img/dice/r2.png");
-      playerLabel.setIcon(pIcon);
-      //playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());  
-      playerLabel.setBounds(114,227,46,46);
-      playerLabel.setVisible(false);
-      bPane.add(playerLabel, 3);
-
+      setSize(board.getIconWidth() + 400, board.getIconHeight() + 50);
 
       // DATA TO THE RIGHT OF BOARD SETUP
       // create the console
@@ -178,14 +146,52 @@ public class BoardLayersListener extends JFrame {
       dataSplitPane.setDividerLocation(600);
 
       // create a split pane to hold the board + console panels
-      splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, boardPanel, dataSplitPane);
+      splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, boardPane, dataSplitPane);
       // set the split location between the board and console/buttons
-      splitPane.setDividerLocation(icon.getIconWidth());
+      splitPane.setDividerLocation(board.getIconWidth());
 
       add(splitPane);  // add the split pane to the frame
       setVisible(true);  // show the frame
    }
+
+   // constructor helper: setting up the board
+   private static void setUpBoard() {
+      // create the board
+      boardLabel = new JLabel();
+      board = new ImageIcon("img/board.jpg");
+      boardLabel.setIcon(board); 
+      boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight());
+
+      boardPane = new JLayeredPane();
+      // add board label(image) to the lowest layer
+      boardPane.add(boardLabel, 0);
+
+      // Add a scene card to this room
+      cardLabel = new JLabel();
+      ImageIcon cIcon =  new ImageIcon("img/card/01.png");
+      cardLabel.setIcon(cIcon); 
+      cardLabel.setBounds(20,65,cIcon.getIconWidth()+2,cIcon.getIconHeight());
+      cardLabel.setOpaque(true);
+            
+      // Add the card to the lower layer
+      boardPane.add(cardLabel, 1);
+
+      // Add a dice to represent a player. 
+      // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
+      playerLabel = new JLabel();
+      ImageIcon pIcon = new ImageIcon("img/dice/r2.png");
+      playerLabel.setIcon(pIcon);
+      //playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());  
+      playerLabel.setBounds(114,227,46,46);
+      playerLabel.setVisible(false);
+      boardPane.add(playerLabel, 3);
+
+      // revalidate and repaint to make sure components are displayed
+      boardPane.revalidate();
+      boardPane.repaint();
+   }
   
+   // END OF CONSTRUCTOR (and helpers)
 
    // This class implements Mouse Events
    class boardMouseListener implements MouseListener{
