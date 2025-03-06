@@ -6,12 +6,14 @@ public class Deadwood {
         // initialize the components of the game
 
         // set up the board
-        Board board = new Board();
+        BoardLayersListener boardView = new BoardLayersListener();
+        boardView.setVisible(true);
+        Board boardStats = new Board();
         BoardCreator fill = new BoardCreator();
-        board = fill.parseBoard();
+        boardStats = fill.parseBoard();
         
         View view = new View();
-        Moderator moderator = new Moderator(board, view);
+        Moderator moderator = new Moderator(boardView, boardStats, view);
 
         // start the game
         view.startGame();
