@@ -189,7 +189,6 @@ public class BoardLayersListener extends JFrame {
 
    // This class implements Mouse Events
    class boardMouseListener implements MouseListener{
-  
       // Code for the different button clicks
       public void mouseClicked(MouseEvent e) { 
          if (e.getSource() == bAct) {
@@ -229,12 +228,12 @@ public class BoardLayersListener extends JFrame {
       }
    }
 
-   // print messaged to the console
+   // print messaged to the console  // VIEW
    public static void displayMessage(String message) {
       consoleArea.append(message + "\n");
    }
 
-   // popup for inputing number players
+   // popup for inputing number players  // INPUT
    public static int playerSelection() {
       Integer[] options = {2, 3, 4, 5, 6, 7, 8};
       // prompt user
@@ -261,6 +260,5 @@ public class BoardLayersListener extends JFrame {
     
       // Take input from the user about number of players
       numPlayers = playerSelection();
-      displayMessage("num players = " +numPlayers);
    }
 }
