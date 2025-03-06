@@ -342,9 +342,8 @@ public class BoardLayersListener extends JFrame {
       return selection;
    }
 
-
+   // FOR TESTING, acts as this classes main method
    public static void makeGUI() {
-  
       BoardLayersListener board = new BoardLayersListener();
       board.setVisible(true);
     
