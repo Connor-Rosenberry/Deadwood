@@ -1,11 +1,3 @@
-/*
-
-   Deadwood GUI helper file
-   Author: Moushumi Sharmin
-   This file shows how to create a simple GUI using Java Swing and Awt Library
-   Classes Used: JFrame, JLabel, JButton, JLayeredPane
-
-*/
 package gui;
 
 import java.awt.*;
@@ -27,9 +19,8 @@ public class BoardLayersListener extends JFrame {
    
    // JLabels
    private static JLabel boardLabel;  // the gameboard
-   private static JLabel cardLabel;
    private static JLabel playerLabel;
-   private static JLabel playerDataLabel;
+   private static JLabel playerDataLabel;  // player data box
    private static JLabel[] activeCardLabels;
 
    // JPanels
@@ -160,7 +151,42 @@ public class BoardLayersListener extends JFrame {
       setVisible(true);  // show the frame
    }
 
+   // TODO DELETE!! ONLY FOR TESTING
+   private static Scene[] getSampleScenes() {
+      SceneCreator createCard = new SceneCreator();
+      Scene[] sceneList = createCard.parseSceneCards();
+
+      // randomly grab 10 scenes
+      Random rand = new Random();
+      List<Scene> sceneArrayList = new ArrayList<>(List.of(sceneList)); // Convert array to List
+      Scene[] selectedScenes = new Scene[10]; // Array for selected scenes
+
+      // for each room with scenes pick a random new scene from the remaining
+      for (int i = 0; i < 10; i++) {
+          int randomIndex = rand.nextInt(sceneArrayList.size());
+          selectedScenes[i] = sceneArrayList.remove(randomIndex);
+      }
+
+      return selectedScenes;
+   }
+
+   // TODO DELETE!! ONLY FOR TESTING
+   private static Set[] getSampleSets() {
+      Set[] sets = new Set[10];
+
+      Board board = new Board();
+      BoardCreator fill = new BoardCreator();
+      board = fill.parseBoard();
+
+      for(int i = 0; i < 10; i++) {
+         sets[i] = (Set) board.getRooms()[i];
+      }
+
+      return sets;
+   }
+
    // constructor helper: setting up the board
+   // GUI ONLY
    private static void setUpBoard() {
       // create the board
       boardLabel = new JLabel();
@@ -173,7 +199,7 @@ public class BoardLayersListener extends JFrame {
       boardPane.add(boardLabel, 0);
 
       // set 10 scene cards on the board
-      setSceneCards();
+      setSceneCards(getSampleScenes(), getSampleSets());
 
       // Add a dice to represent a player. 
       // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
@@ -196,49 +222,56 @@ public class BoardLayersListener extends JFrame {
    // sets should ONLY contain the 10 sets the scenes should be in
    // scenes and sets will be access with the same i
    // returns the JLabels for the set up cards
+   // GUI ONLY
    public static JLabel[] setSceneCards(Scene[] scenes, Set[] sets) {
+      JLabel[] cardLabels = new JLabel[10];
       // for the 10 rooms that need scenes assign a scene
       for(int i = 0; i < 10; i++) {
-         sets[i].getScene().getImg();
-         sets[i].getTakes();  // TODO use for calling takes methods
+         // get img file from
+         String filename = "img/card/" + scenes[i].getImg();
+         // get set card placement area
+         int x = sets[i].getX();
+         int y = sets[i].getY();
+         
+         // add a scene card to the room
+         JLabel cardLabel = new JLabel();
+         ImageIcon cardIcon = new ImageIcon(filename);
+         cardLabel.setIcon(cardIcon);
+         cardLabel.setBounds(x, y, cardIcon.getIconWidth(), cardIcon.getIconHeight());
+         cardLabel.setOpaque(true);
 
+         // Add the card to the lower layer
+         boardPane.add(cardLabel, Integer.valueOf(1));
+
+         // add to the array
+         cardLabels[i] = cardLabel;
+         
+         // set up the takes on the board
+         setTakes(sets[i], sets[i].getTakes());
       }
-      
-      
-
-
-      // Add a scene card to this room
-      cardLabel = new JLabel();
-      ImageIcon cIcon =  new ImageIcon("img/card/01.png");
-      cardLabel.setIcon(cIcon); 
-      cardLabel.setBounds(20,65,cIcon.getIconWidth()+2,cIcon.getIconHeight());
-      cardLabel.setOpaque(true);
-            
-      // Add the card to the lower layer
-      boardPane.add(cardLabel, Integer.valueOf(1));
-
-
-      return activeCardLabels;
+      return cardLabels;
    }
 
    // TODO -- clean scene cards from board (GUI ONLY)
    public static void removeSceneCards(JLabel[] activeCardLabels) {
+      // also call clear takes here
+
       return;
    }
 
    // TODO -- for the given set, set up the takes (shot counter)
-   public static void setTakes(Set set, Takes[] takes) {
+   public static void setTakes(Set set, Take[] takes) {
 
    }
 
    // TODO -- for the given Set, remove one of the takes
    // WARNING: does not error check for if there are no more shots to remove
-   public static void removeTake(Set set, Takes[] takes) {
+   public static void removeTake(Set set, Take[] takes) {
 
    }
 
    // TODO -- removes all takes from the given set
-   public static void clearShots(Set set, Takes[] takes) {
+   public static void clearShots(Set set, Take[] takes) {
 
    }
   
@@ -310,7 +343,7 @@ public class BoardLayersListener extends JFrame {
    }
 
 
-   public static void main(String[] args) {
+   public static void makeGUI() {
   
       BoardLayersListener board = new BoardLayersListener();
       board.setVisible(true);
