@@ -169,6 +169,16 @@ public class BoardLayersListener extends JFrame {
 
    // TODO DELETE!! ONLY FOR TESTING
    private static Set[] getSampleSets() {
+      // set 0: train station
+      // set 1: secert hideout
+      // set 2: church
+      // set 3: hotel
+      // set 4: main st
+      // set 5: jail
+      // set 6: general store
+      // set 7: ranch
+      // set 8: bank
+      // set 9: saloon
       Set[] sets = new Set[10];
 
       Board board = new Board();
@@ -244,31 +254,53 @@ public class BoardLayersListener extends JFrame {
          cardLabels[i] = cardLabel;
          
          // set up the takes on the board
-         setTakes(sets[i], sets[i].getTakes());
+         setTakes(sets[i].getTakes());
       }
       return cardLabels;
    }
 
    // TODO -- clean scene cards from board (GUI ONLY)
-   public static void removeSceneCards(JLabel[] activeCardLabels) {
+   public static void removeSceneCards(JLabel[] cardLabels) {
+      // for each set
+      for (int i = 0; i < 10; i++) {
+         boardPane.remove(cardLabels[i]);
+      }
       // also call clear takes here
-
       return;
    }
 
-   // TODO -- for the given set, set up the takes (shot counter)
-   public static void setTakes(Set set, Take[] takes) {
+   // set up the takes for the set associated w takes (shot counter)
+   public static JLabel[] setTakes(Take[] takes) {
+      JLabel[] takeLabels = new JLabel[takes.length];
+      String filename = "gui/img/shot.png";
+      // for every take in the array
+      for (int i = 0; i <takes.length; i++) {
+         int x = takes[i].getX();
+         int y = takes[i].getY();
 
+         JLabel takeLabel = new JLabel();
+         ImageIcon takeIcon = new ImageIcon(filename);
+         takeLabel.setIcon(takeIcon);
+         takeLabel.setBounds(x, y, takeIcon.getIconWidth(), takeIcon.getIconHeight());
+         takeLabel.setOpaque(true);
+
+         // Add the take to the lower layer
+         boardPane.add(takeLabel, Integer.valueOf(1));
+
+         // add to the array
+         takeLabels[i] = takeLabel;
+      }
+      return takeLabels;
    }
 
    // TODO -- for the given Set, remove one of the takes
    // WARNING: does not error check for if there are no more shots to remove
-   public static void removeTake(Set set, Take[] takes) {
+   public static void removeTake(JLabel[] takeLabels) {
 
    }
 
    // TODO -- removes all takes from the given set
-   public static void clearShots(Set set, Take[] takes) {
+   public static void clearShots(JLabel[] takeLabels) {
 
    }
   
