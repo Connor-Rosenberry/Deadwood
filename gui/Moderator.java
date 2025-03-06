@@ -587,6 +587,23 @@ public class Moderator {
                                     .collect(Collectors.joining(", "));
         view.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
     }
-}
+    }
+
+    // GETS/SETS
+    public Scene[] getSceneList() {
+        return this.sceneList;
+    }
+
+    public void setSceneList(Scene[] sceneList) {
+        this.sceneList = sceneList;
+    }
+
+    public Board getBoard() {
+        return this.board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
 }
