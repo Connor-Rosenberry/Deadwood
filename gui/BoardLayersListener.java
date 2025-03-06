@@ -392,8 +392,6 @@ public class BoardLayersListener extends JFrame {
       }
       return selection;
    }
-<<<<<<< HEAD
-=======
 
    // FOR TESTING, acts as this classes main method
    public static void makeGUI() {
@@ -403,5 +401,4 @@ public class BoardLayersListener extends JFrame {
       // Take input from the user about number of players
       numPlayers = playerSelection();
    }
->>>>>>> c242887198d6a47d01c7f3e7c0eeaeae29caa040
 }
