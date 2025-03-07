@@ -21,6 +21,14 @@ public class BoardLayersListener extends JFrame {
    private static JLabel playerDataLabel;  // player data box
    private static JLabel[] activeCardLabels;
    private static JLabel[][] activeTakeLabels = new JLabel[10][];  // an array per set
+   private static JLabel[] player1Labels;
+   private static JLabel[] player2Labels;
+   private static JLabel[] player3Labels;
+   private static JLabel[] player4Labels;
+   private static JLabel[] player5Labels;
+   private static JLabel[] player6Labels;
+   private static JLabel[] player7Labels;
+   private static JLabel[] player8Labels;
 
    // JPanels
    // containers that hold groups of components
@@ -38,7 +46,6 @@ public class BoardLayersListener extends JFrame {
    private static JButton bEndGame;  // end game
 
    // JLayered Pane
-   private static JLayeredPane bPane;
    private static JLayeredPane boardPane;
 
    // JSplitPane
@@ -58,8 +65,6 @@ public class BoardLayersListener extends JFrame {
       super("Deadwood");
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
-      // Create the JLayeredPane to hold the display, cards, dice and buttons
-      bPane = getLayeredPane();
     
       // Create the deadwood board
       setUpBoard();
