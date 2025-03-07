@@ -281,7 +281,7 @@ public class BoardLayersListener extends JFrame {
 
    // remove just one scene card, from the given JLabel
    // NOTE: be careful to track what scenes have already been removed
-   public static void removeSceneCards(JLabel cardLabel) {
+   public static void removeSceneCard(JLabel cardLabel) {
       if (cardLabel == null) {
          // for array/loop handling, no card to remove
          return;
@@ -295,7 +295,7 @@ public class BoardLayersListener extends JFrame {
 
    // remove just one scene card AND its takes, from the given JLabel
    // NOTE: be careful to track what scenes have already been removed
-   public static void removeSceneCards(JLabel cardLabel, JLabel[]takeLabels) {
+   public static void removeSceneCard(JLabel cardLabel, JLabel[]takeLabels) {
       if (cardLabel == null) {
          // for array/loop handling, no card to remove
          clearTakes(takeLabels);
@@ -551,6 +551,10 @@ public class BoardLayersListener extends JFrame {
 
    // move a player to a given role
    public static void movePlayerOffCardRole(int playerNum, Role role) {
+      int x = role.getX();
+      int y = role.getY();
+      // the current player label with the right rank
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]];
 
    }
 
