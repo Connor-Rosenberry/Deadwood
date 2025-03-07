@@ -544,19 +544,18 @@ public class BoardLayersListener extends JFrame {
       playerDieLevel[playerNum - 1]++;
    }
 
-   // move a player to the given room
-   public static void movePlayerRoom() {
+   // move a player to the given room, specifiying how many players are already here
+   public static void movePlayerRoom(int room, int playerNum) {
+      // TODO figure out what area cord apply for each room
+   }
+
+   // move a player to a given role
+   public static void movePlayerOffCardRole(int playerNum, Role role) {
 
    }
 
-   // move a player to a given on-card role
-   public static void movePlayerOnCard() {
-
-   }
-
-   // move a player to a given off-card role (on the set)
-   public static void movePlayerOffCard() {
-
+   public static void movePlayerOnCardRole(int playerNum, Role role, Scene scene) {
+      
    }
 
    // maybe make some wrappers that make it easier to move to specific rooms
@@ -631,14 +630,11 @@ public class BoardLayersListener extends JFrame {
 
    // FOR TESTING, acts as this classes main method
    public static void makeGUI() {
-      BoardLayersListener board = new BoardLayersListener();
-      board.setVisible(true);
-    
       // Take input from the user about number of players
       numPlayers = playerSelection();
 
       // example of how to remove a single take
-      // removeTake(activeTakeLabels[0]);
+      removeTake(activeTakeLabels[0]);
 
       // example of how to remove takes and labels
       removeSceneCards(activeCardLabels, activeTakeLabels);
