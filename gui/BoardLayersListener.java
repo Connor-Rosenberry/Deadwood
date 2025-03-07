@@ -230,6 +230,8 @@ public class BoardLayersListener extends JFrame {
       boardPane.repaint();
    }
 
+   // SCENE CARDS
+
    // constructor helper: will randomly select 10 cards to set on the scene
    // scenes should ONLY contain the 10 scene cards that shall be place
    // sets should ONLY contain the 10 sets the scenes should be in
@@ -319,6 +321,8 @@ public class BoardLayersListener extends JFrame {
       return;
    }
 
+   // TAKES
+
    // set up the takes for the set associated w takes (shot counter)
    public static JLabel[] setTakes(Take[] takes) {
       JLabel[] takeLabels = new JLabel[takes.length];
@@ -379,6 +383,43 @@ public class BoardLayersListener extends JFrame {
       boardPane.revalidate();
       boardPane.repaint();
       return;
+   }
+
+   // PLAYER DICE
+
+   // initalize all player dice JLabels
+   public static void setAllPlayers() {
+
+   }
+
+   // remove a specific players dice JLabels
+   public static void removePlayer() {
+
+   }
+
+   // remove all players dice JLabels
+   public static void clearAllPlayers() {
+
+   }
+
+   // increase a given players rank (and dice display)
+   public static void increasePlayersRank() {
+
+   }
+
+   // move a player to the given room
+   public static void movePlayerRoom() {
+
+   }
+
+   // move a player to a given on-card role
+   public static void movePlayerOnCard() {
+
+   }
+
+   // move a player to a given off-card role (on the set)
+   public static void movePlayerOffCard() {
+      
    }
   
    // END OF CONSTRUCTOR (and helpers)
