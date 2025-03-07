@@ -13,7 +13,17 @@ import java.util.List;
 // View: handles UI
 // JFrame: main window
 public class BoardLayersListener extends JFrame {
-   public static int numPlayers;
+   // default data types
+   private static int numPlayers;
+   // helpers for player dice rank (0-5 representing rank 1-6)
+   private static int player1Die;
+   private static int player2Die;
+   private static int player3Die;
+   private static int player4Die;
+   private static int player5Die;
+   private static int player6Die;
+   private static int player7Die;
+   private static int player8Die;
    
    // JLabels
    private static JLabel boardLabel;  // the gameboard
@@ -214,17 +224,6 @@ public class BoardLayersListener extends JFrame {
       // set 10 scene cards on the board
       activeCardLabels = setSceneCards(getSampleScenes(), getSampleSets());
 
-      // Add a dice to represent a player. 
-      // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
-      playerLabel = new JLabel();
-      ImageIcon pIcon = new ImageIcon("gui/img/dice/r2.png");
-      playerLabel.setIcon(pIcon);
-      playerLabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());  
-      //playerLabel.setBounds(114,227,46,46);
-      playerLabel.setVisible(true);
-
-      boardPane.add(playerLabel, Integer.valueOf(3));
-
       // revalidate and repaint to make sure components are displayed
       boardPane.revalidate();
       boardPane.repaint();
@@ -388,8 +387,111 @@ public class BoardLayersListener extends JFrame {
    // PLAYER DICE
 
    // initalize all player dice JLabels
+   // not setting bounds or visible, as we do not want to display them on the board yet
    public static void setAllPlayers() {
+      // init player 1 (blue)
+      player1Labels = new JLabel[6];
+      player1Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/b" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
 
+         // add to the player1 array
+         player1Labels[i] = dieLabel;
+      }
+
+      // init player 2 (cyan)
+      player2Labels = new JLabel[6];
+      player2Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/c" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player2Labels[i] = dieLabel;
+      }
+
+      // init player 3 (green)
+      player3Labels = new JLabel[6];
+      player3Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/g" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player3Labels[i] = dieLabel;
+      }
+
+      // init player 4 (orange)
+      player4Labels = new JLabel[6];
+      player4Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/o" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player4Labels[i] = dieLabel;
+      }
+
+      // init player 5 (pink)
+      player5Labels = new JLabel[6];
+      player5Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/p" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player5Labels[i] = dieLabel;
+      }
+
+      // init player 6 (red)
+      player6Labels = new JLabel[6];
+      player6Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/r" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player6Labels[i] = dieLabel;
+      }
+
+      // init player 7 (violet)
+      player7Labels = new JLabel[6];
+      player7Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/v" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player7Labels[i] = dieLabel;
+      }
+
+      // init player 8 (yellow)
+      player8Labels = new JLabel[6];
+      player8Die = 0;
+      for (int i = 0; i < 6; i++) {
+         String filename = "gui/img/dice/y" + (i + 1) +".png";
+         JLabel dieLabel = new JLabel();
+         ImageIcon dieIcon = new ImageIcon(filename);
+         dieLabel.setIcon(dieIcon);
+
+         // add to the player1 array
+         player8Labels[i] = dieLabel;
+      }
    }
 
    // remove a specific players dice JLabels
@@ -419,8 +521,10 @@ public class BoardLayersListener extends JFrame {
 
    // move a player to a given off-card role (on the set)
    public static void movePlayerOffCard() {
-      
+
    }
+
+   // maybe make some wrappers that make it easier to move to specific rooms
   
    // END OF CONSTRUCTOR (and helpers)
 
