@@ -540,26 +540,52 @@ public class BoardLayersListener extends JFrame {
 
    // increase a given players rank (and dice display)
    // player is 1-8 (do not consider 0 indexing for param)
+   // TODO
    public static void increasePlayersRank(int playerNum) {
       playerDieLevel[playerNum - 1]++;
+      // TODO update players dice display wherever it is
+      // for the given player (to update their dice on the screen) (always in same spot in casting office when upgrading):
+      // increase playerDieLevel[playerNum - 1]++;
+      // in the playerLabels[playerNum-1][playerDieLevel[playerNum - 1] (the players new Jframe for their upgraded rank)
+      // make the old Jframe not visible
+      // set the new Jframe to the casting office location and make visible (call move after it's implemented)
+
    }
 
    // move a player to the given room, specifiying how many players are already here
+   // TODO
    public static void movePlayerRoom(int room, int playerNum) {
       // TODO figure out what area cord apply for each room
    }
 
    // move a player to a given role
+   // need to test
    public static void movePlayerOffCardRole(int playerNum, Role role) {
       int x = role.getX();
       int y = role.getY();
-      // the current player label with the right rank
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]];
+      int w = role.getW();
+      int h = role.getH();
 
+      // move the current player label with the right rank to the given role
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setBounds(x, y, w, h);
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setOpaque(true);
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setVisible(true);
    }
 
-   public static void movePlayerOnCardRole(int playerNum, Role role, Scene scene) {
-      
+   // move a player to the given on card role set to the given set
+   public static void movePlayerOnCardRole(int playerNum, Role role, Set set) {
+      // get correct cords
+      int setX = set.getX();
+      int setY = set.getY();
+      int roleX = role.getX();
+      int roleY = role.getY();
+      int roleW = role.getW();
+      int roleH = role.getH();
+
+      // move the current player label with the right rank to the given role
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setBounds(setX + roleX, setY + roleY, roleW, roleH);
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setOpaque(true);
+      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setVisible(true);
    }
 
    // maybe make some wrappers that make it easier to move to specific rooms
