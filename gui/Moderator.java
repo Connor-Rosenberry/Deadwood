@@ -3,6 +3,7 @@ package gui;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,9 +144,17 @@ public class Moderator implements GameActionListener {
         // Convert the remaining list back to an array
         Scene[] remainingScenes = sceneArrayList.toArray(new Scene[0]);
 
+        // set up the scenes on the gui
+        Room[] allRooms = board.getRooms();
+        Set[] sets = new Set[10];
+        for (int i = 0; i < 10; i++) {
+            sets[i] = (Set) allRooms[i];
+        } 
+        BoardLayersListener.setSceneCards(selectedScenes, sets);
+
         // for the 10 rooms that need scenes assign a scene
         for(int i = 0; i < 10; i++) {
-            Set set = (Set) board.getRooms()[i];
+            Set set = sets[i];
             
             // set up each room back to default
             for(int j = 0; j < set.getRoles().length; j++) {
@@ -201,8 +210,6 @@ public class Moderator implements GameActionListener {
                 BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
                 return true;
             }
-
-
     
             // get the requested destination and attempt to move there
             String destination = BoardLayersListener.roomSelection(playerList[currentPlayer].getLocation().getNeighbors());
@@ -239,12 +246,14 @@ public class Moderator implements GameActionListener {
             view.displayMessage("Work command selected.");
             if(playerList[currentPlayer].getRole() != null) {
                 view.displayMessage("You are already working, you can act or rehearse");
+                BoardLayersListener.displayMessage("You are already working, you can act or rehearse");
                 return true;
             }
             
             // player must be at a location with roles
             if(playerList[currentPlayer].getLocation().getName().equals("office") || playerList[currentPlayer].getLocation().getName().equals("trailer")) {
                 view.displayMessage("Must be at a location with roles to work");
+                BoardLayersListener.displayMessage("Must be at a location with roles to work");
                 return true;
             }
 
@@ -253,13 +262,22 @@ public class Moderator implements GameActionListener {
             Scene locationScene = location.getScene();
             
             // display the available roles
-            if (commandLength == 1) {
-                view.displayMessage("Please specify a role to work, the options are \n" + Arrays.toString(location.getRoleNames()) + Arrays.toString(locationScene.getRoleNames()));
-                return true;
-            }
+            // if (commandLength == 1) {
+            //     view.displayMessage("Please specify a role to work, the options are \n" + Arrays.toString(location.getRoleNames()) + Arrays.toString(locationScene.getRoleNames()));
+            //     return true;
+            // }
+
+            // wanted to try something new "Stream" the arrays together
+            String[] combinedRoles = Stream.concat(Arrays.stream(location.getRoleNames()), Arrays.stream(locationScene.getRoleNames())).toArray(String[]::new);
 
             // get the requested destination and attempt to let the player work there
-            String destination = String.join(" ", command.subList(1, commandLength));
+            // String destination = String.join(" ", command.subList(1, commandLength));
+
+            String destination = BoardLayersListener.roomSelection(combinedRoles);
+            int commaIndex = destination.indexOf(",");
+            if (commaIndex != -1) {
+                destination = destination.substring(0, commaIndex).trim();
+            }
             return work(playerList[currentPlayer], destination);
 
         }
@@ -379,8 +397,11 @@ public class Moderator implements GameActionListener {
         Role[] boardRoles = location.getRoles();
         Scene locationScene = location.getScene();
         Role[] sceneRoles = locationScene.getRoles();
+        boolean onCard = false;
 
         Role role = null;
+
+        // get the role
 
         // check each board role
         for(int i = 0; i < boardRoles.length; i++) {
@@ -397,32 +418,47 @@ public class Moderator implements GameActionListener {
             // if the destination is a valid roll
             if(sceneRoles[i].getName().equals(destination)) {
                 role = sceneRoles[i];
+                onCard = true;
             }
         }
 
+        // roles should always be valid
         // if not a valid role
-        if(role == null) {
-            view.displayMessage("The role you entered does not exist at this location \n roles at this location are " + Arrays.toString(location.getRoleNames()) + Arrays.toString(locationScene.getRoleNames()));
-            return true;
-        }
+        // if(role == null) {
+        //     view.displayMessage("The role you entered does not exist at this location \n roles at this location are " + Arrays.toString(location.getRoleNames()) + Arrays.toString(locationScene.getRoleNames()));
+        //     return true;
+        // }
 
         // check if the scene is wrapped, role is taken, or if player rank is too low
         if(role.getScene().getStatus().equals("wrapped")) {
             view.displayMessage("the scene for this room has been wrapped");
+            BoardLayersListener.displayMessage("the scene for this room has been wrapped");
             return true;
         }
         if(role.getActor() != null) {
             view.displayMessage("This role is already taken");
+            BoardLayersListener.displayMessage("This role is already taken");
             return true;
         }
         if(role.getRankToAct() > currentPlayer.getRank()) {
             view.displayMessage("This role's rank is too high");
+            BoardLayersListener.displayMessage("This role's rank is too high");
             return true;
         }
 
         // then if not, set the players role 
         currentPlayer.setRole(role);
         currentPlayer.getRole().setActor(currentPlayer);
+
+        if(onCard) {
+            // movePlayerOnCardRole();
+        } else {  
+            int x = role.getX();
+            int y = role.getY();
+            int w = role.getW();
+            int h = role.getH();
+            BoardLayersListener.movePlayerOffCardRole(x, y, w, h);
+        }
 
         view.displayMessage("Player is now working " + role.getName());
 

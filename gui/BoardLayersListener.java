@@ -238,7 +238,7 @@ public class BoardLayersListener extends JFrame {
    // scenes and sets will be access with the same i
    // returns the JLabels for the set up cards
    // GUI ONLY
-   public static JLabel[] setSceneCards(Scene[] scenes, Set[] sets) {
+   public static void setSceneCards(Scene[] scenes, Set[] sets) {
       JLabel[] cardLabels = new JLabel[10];
       // for the 10 rooms that need scenes assign a scene
       for(int i = 0; i < 10; i++) {
@@ -264,7 +264,7 @@ public class BoardLayersListener extends JFrame {
          // set up the takes on the board
          activeTakeLabels[i] = setTakes(sets[i].getTakes());
       }
-      return cardLabels;
+      activeCardLabels = cardLabels;
    }
 
    // clean scene cards from board (GUI ONLY)
@@ -571,20 +571,14 @@ public class BoardLayersListener extends JFrame {
 
    // move a player to a given role
    // need to test
-   public static void movePlayerOffCardRole(int playerNum, Role role) {
-      int x = role.getX();
-      int y = role.getY();
-      int w = role.getW();
-      int h = role.getH();
+   public static void movePlayerOffCardRole(int x, int y, int w, int h) {
 
       // move the current player label with the right rank to the given role
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setBounds(x, y, w, h);
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setOpaque(true);
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setVisible(true);
+      playerLabel.setBounds(x, y, w, h);
    }
 
    // move a player to the given on card role set to the given set
-   public static void movePlayerOnCardRole(int playerNum, Role role, Set set) {
+   public static void movePlayerOnCardRole(Role role, Set set) {
       // get correct cords
       int setX = set.getX();
       int setY = set.getY();
@@ -594,9 +588,7 @@ public class BoardLayersListener extends JFrame {
       int roleH = role.getH();
 
       // move the current player label with the right rank to the given role
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setBounds(setX + roleX, setY + roleY, roleW, roleH);
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setOpaque(true);
-      playerLabels[playerNum - 1][playerDieLevel[playerNum - 1]].setVisible(true);
+      playerLabel.setBounds(setX + roleX, setY + roleY, roleW, roleH);
    }
 
    // maybe make some wrappers that make it easier to move to specific rooms
@@ -733,6 +725,23 @@ public class BoardLayersListener extends JFrame {
          null,
          adjacentRooms,
          adjacentRooms[0]);
+      if (selection == null) {
+         // player didn't select
+         return "";  // default option
+      }
+      return selection;
+   }
+
+   public static String workSelection(String[] roles) {
+      // prompt user
+      String selection = (String) JOptionPane.showInputDialog(
+         null,
+         "What room would you like to move to",
+         "Move selection",
+         JOptionPane.QUESTION_MESSAGE,
+         null,
+         roles,
+         roles[0]);
       if (selection == null) {
          // player didn't select
          return "";  // default option
