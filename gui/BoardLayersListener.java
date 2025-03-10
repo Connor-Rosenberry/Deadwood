@@ -93,41 +93,44 @@ public class BoardLayersListener extends JFrame {
       // adjust the grid layout based on num of buttons
       buttonPanel.setLayout(new GridLayout(4, 2));
 
+      boardMouseListener mouseListener = new boardMouseListener();
+      mouseListener.addGameActionListener(gameActionListener);
+
       // create player buttons
       // act
       bAct = new JButton("Act");
       bAct.setBackground(Color.white);
-      bAct.addMouseListener(new boardMouseListener());
+      bAct.addMouseListener(mouseListener);
         
       // rehearse
       bRehearse = new JButton("Rehearse");
       bRehearse.setBackground(Color.white);
-      bRehearse.addMouseListener(new boardMouseListener());
+      bRehearse.addMouseListener(mouseListener);
         
       // move
       bMove = new JButton("Move");
       bMove.setBackground(Color.white);
-      bMove.addMouseListener(new boardMouseListener());
+      bMove.addMouseListener(mouseListener);
 
       // upgrade
       bUpgrade = new JButton("Upgrade");
       bUpgrade.setBackground(Color.white);
-      bUpgrade.addMouseListener(new boardMouseListener());
+      bUpgrade.addMouseListener(mouseListener);
 
       // take role
       bTakeRole = new JButton("Take Role");
       bTakeRole.setBackground(Color.white);
-      bTakeRole.addMouseListener(new boardMouseListener());
+      bTakeRole.addMouseListener(mouseListener);
 
       // end turn
       bEndTurn = new JButton("End Turn");
       bEndTurn.setBackground(Color.white);
-      bEndTurn.addMouseListener(new boardMouseListener());
+      bEndTurn.addMouseListener(mouseListener);
 
       // end game
       bEndGame = new JButton("End Game");
       bEndGame.setBackground(Color.white);
-      bEndGame.addMouseListener(new boardMouseListener());
+      bEndGame.addMouseListener(mouseListener);
  
       // Place the action buttons in the top layer
       buttonPanel.add(bAct);
@@ -636,7 +639,7 @@ public class BoardLayersListener extends JFrame {
          }
          else if (e.getSource() == bTakeRole) {
             displayMessage("Take Role selected");
-            notifyListeners("takeRole");
+            notifyListeners("work");
          }
          else if (e.getSource() == bEndTurn) {
             displayMessage("End turn selected");
@@ -693,16 +696,6 @@ public class BoardLayersListener extends JFrame {
       // set the players
       adjustPlayerCount(numPlayers);
 
-      boardMouseListener mouseListener = new boardMouseListener();
-      mouseListener.addGameActionListener(gameActionListener);
-
-      bAct.addMouseListener(mouseListener);
-      bRehearse.addMouseListener(mouseListener);
-      bMove.addMouseListener(mouseListener);
-      bUpgrade.addMouseListener(mouseListener);
-      bTakeRole.addMouseListener(mouseListener);
-      bEndTurn.addMouseListener(mouseListener);
-      bEndGame.addMouseListener(mouseListener);
 
       // // example of how to remove a single take
       // removeTake(activeTakeLabels[0]);
@@ -728,5 +721,27 @@ public class BoardLayersListener extends JFrame {
       playerLabels[currentPlayer][rank].setVisible(true);
       boardPane.revalidate();
       boardPane.repaint();
+   }
+
+   public static String roomSelection(String[] adjacentRooms) {
+      // prompt user
+      String selection = (String) JOptionPane.showInputDialog(
+         null,
+         "What room would you like to move to",
+         "Move selection",
+         JOptionPane.QUESTION_MESSAGE,
+         null,
+         adjacentRooms,
+         adjacentRooms[0]);
+      if (selection == null) {
+         // player didn't select
+         return "";  // default option
+      }
+      return selection;
+   }
+
+   public static void setPlayerLocation(int x, int y) {
+      // maybe loop through player positions to check if there is already a player at location
+      playerLabel.setBounds(x, y, 40, 40);
    }
 }

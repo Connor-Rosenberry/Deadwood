@@ -190,22 +190,22 @@ public class Moderator implements GameActionListener {
         List<String> command = new ArrayList<>(Arrays.asList(input.split(" ")));
         int commandLength = command.size();
     
-        if (command.get(0).equals("move")) {
+        if (input.equals("move")) {
             if(playerList[currentPlayer].getHasMoved() == true) {
                 view.displayMessage("Player has already moved, please pick a different command");
+                BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
                 return true;
             }
             if(playerList[currentPlayer].getRole() != null) {
                 view.displayMessage("cannot move while working");
+                BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
                 return true;
             }
-            if (commandLength == 1) {
-                view.displayMessage("Move where? Please specify a destination.");
-                return true;
-            }
+
+
     
             // get the requested destination and attempt to move there
-            String destination = String.join(" ", command.subList(1, commandLength));
+            String destination = BoardLayersListener.roomSelection(playerList[currentPlayer].getLocation().getNeighbors());
             move(playerList[currentPlayer], destination);
 
             return true;
@@ -366,6 +366,8 @@ public class Moderator implements GameActionListener {
 
             }
         }
+        BoardLayersListener.setPlayerLocation(currentPlayer.getLocation().getX(), currentPlayer.getLocation().getY());
+
         return true;
     }
 
