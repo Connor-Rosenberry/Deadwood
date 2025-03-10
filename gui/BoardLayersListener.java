@@ -155,48 +155,48 @@ public class BoardLayersListener extends JFrame {
    }
 
    // TODO DELETE!! ONLY FOR TESTING
-   private static Scene[] getSampleScenes() {
-      SceneCreator createCard = new SceneCreator();
-      Scene[] sceneList = createCard.parseSceneCards();
+   // private static Scene[] getSampleScenes() {
+   //    SceneCreator createCard = new SceneCreator();
+   //    Scene[] sceneList = createCard.parseSceneCards();
 
-      // randomly grab 10 scenes
-      Random rand = new Random();
-      List<Scene> sceneArrayList = new ArrayList<>(List.of(sceneList)); // Convert array to List
-      Scene[] selectedScenes = new Scene[10]; // Array for selected scenes
+   //    // randomly grab 10 scenes
+   //    Random rand = new Random();
+   //    List<Scene> sceneArrayList = new ArrayList<>(List.of(sceneList)); // Convert array to List
+   //    Scene[] selectedScenes = new Scene[10]; // Array for selected scenes
 
-      // for each room with scenes pick a random new scene from the remaining
-      for (int i = 0; i < 10; i++) {
-          int randomIndex = rand.nextInt(sceneArrayList.size());
-          selectedScenes[i] = sceneArrayList.remove(randomIndex);
-      }
+   //    // for each room with scenes pick a random new scene from the remaining
+   //    for (int i = 0; i < 10; i++) {
+   //        int randomIndex = rand.nextInt(sceneArrayList.size());
+   //        selectedScenes[i] = sceneArrayList.remove(randomIndex);
+   //    }
 
-      return selectedScenes;
-   }
+   //    return selectedScenes;
+   // }
 
    // TODO DELETE!! ONLY FOR TESTING
-   private static Set[] getSampleSets() {
-      // set 0: train station
-      // set 1: secert hideout
-      // set 2: church
-      // set 3: hotel
-      // set 4: main st
-      // set 5: jail
-      // set 6: general store
-      // set 7: ranch
-      // set 8: bank
-      // set 9: saloon
-      Set[] sets = new Set[10];
+   // private static Set[] getSampleSets() {
+   //    // set 0: train station
+   //    // set 1: secert hideout
+   //    // set 2: church
+   //    // set 3: hotel
+   //    // set 4: main st
+   //    // set 5: jail
+   //    // set 6: general store
+   //    // set 7: ranch
+   //    // set 8: bank
+   //    // set 9: saloon
+   //    Set[] sets = new Set[10];
 
-      Board board = new Board();
-      BoardCreator fill = new BoardCreator();
-      board = fill.parseBoard();
+   //    Board board = new Board();
+   //    BoardCreator fill = new BoardCreator();
+   //    board = fill.parseBoard();
 
-      for(int i = 0; i < 10; i++) {
-         sets[i] = (Set) board.getRooms()[i];
-      }
+   //    for(int i = 0; i < 10; i++) {
+   //       sets[i] = (Set) board.getRooms()[i];
+   //    }
 
-      return sets;
-   }
+   //    return sets;
+   // }
 
    // constructor helper: setting up the board
    // GUI ONLY
@@ -212,7 +212,7 @@ public class BoardLayersListener extends JFrame {
       boardPane.add(boardLabel, 0);
 
       // set 10 scene cards on the board
-      activeCardLabels = setSceneCards(getSampleScenes(), getSampleSets());
+      // activeCardLabels = setSceneCards(getSampleScenes(), getSampleSets());
 
       // revalidate and repaint to make sure components are displayed
       boardPane.revalidate();
@@ -659,14 +659,37 @@ public class BoardLayersListener extends JFrame {
    }
 
    // FOR TESTING, acts as this classes main method
-   public static void makeGUI() {
+   public void makeGUI() {
       // Take input from the user about number of players
       numPlayers = playerSelection();
 
-      // example of how to remove a single take
-      removeTake(activeTakeLabels[0]);
+      // set the players
+      adjustPlayerCount(numPlayers);
 
-      // example of how to remove takes and labels
-      removeSceneCards(activeCardLabels, activeTakeLabels);
+
+      // // example of how to remove a single take
+      // removeTake(activeTakeLabels[0]);
+
+      // // example of how to remove takes and labels
+      // removeSceneCards(activeCardLabels, activeTakeLabels);
+   }
+
+
+   // added by connor
+   public int getNumPlayers() {
+      return numPlayers;
+   }
+
+   public void setActivePlayer(int currentPlayer, int rank) {
+      playerLabel = playerLabels[currentPlayer][rank];
+   }
+
+   public void setPlayersVisible(int currentPlayer, int rank, int x, int y) {
+      // set up the dice to be visible
+      System.out.println("rank in visible = " + rank);
+      playerLabels[currentPlayer][rank].setBounds(x, y, 40, 40);
+      playerLabels[currentPlayer][rank].setVisible(true);
+      boardPane.revalidate();
+      boardPane.repaint();
    }
 }

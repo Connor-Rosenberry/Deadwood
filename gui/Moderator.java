@@ -24,21 +24,27 @@ public class Moderator {
 
     // start the game, includes the loop until game over
     public void startGame() {
+        // start the board
+        boardView.makeGUI();
 
         // get the number of players and adds them to playerList
-        view.displayMessage("How many players will be playing today? [2-8]");
-        int numPlayers = view.getUserInt();
+        // view.displayMessage("How many players will be playing today? [2-8]");
+        int numPlayers = boardView.getNumPlayers();
 
-        if(numPlayers < 2 || numPlayers > 8) {
-            view.displayMessage("Must be between 2 and 8 players");
-            return;
-        }
+        // not possible to be out of bounds
+
+        // if(numPlayers < 2 || numPlayers > 8) {
+        //     view.displayMessage("Must be between 2 and 8 players");
+        //     return;
+        // }
         playerList = new Player[numPlayers];
 
         // create "numPlayers" number of players
         for(int i = 0; i < numPlayers; i++) {
-            view.displayMessage("what is player " + (i + 1) + "'s name?");
-            String input = view.getUserInput();
+            // view.displayMessage("what is player " + (i + 1) + "'s name?");
+            // String input = view.getUserInput();
+            String input = "player " + i;
+
             Player player = new Player(input);
             playerList[i] = player;
             if(numPlayers == 5) {
@@ -70,7 +76,10 @@ public class Moderator {
         // Also note that a "player's" number is one number higher than their index in playerList
         // ex. player 1 = playerList[0];
         while (gameRunning) {
-            view.displayMessage("It's " + playerList[currentPlayer].getName() + "'s turn.");
+            // view.displayMessage("It's " + playerList[currentPlayer].getName() + "'s turn.");
+            boardView.setActivePlayer(currentPlayer, playerList[currentPlayer].getRank() - 1);
+            System.out.println("active player is " + playerList[currentPlayer].getName());
+
             boolean turnActive = true;
 
             // Player's turn loop
@@ -131,11 +140,22 @@ public class Moderator {
 
         }
 
+
+        int x = board.getRooms()[11].getX();
+        int y = board.getRooms()[11].getY();
         // set the players back to the trailers
         for(int i = 0; i < playerList.length; i++) {
             Player player = playerList[i];
             player.setLocation(board.getRooms()[11]);
             player.setRole(null);
+
+            // for formatting
+            if(i < 4) {
+                boardView.setPlayersVisible(i, player.getRank() - 1, x + (i * 40), y);
+            } else {
+                boardView.setPlayersVisible(i, player.getRank() - 1, x + ((i - 4) * 40), y + 40);
+            }
+            
         }
         
         dayCount++;

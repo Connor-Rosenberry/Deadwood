@@ -7,7 +7,6 @@ public class Deadwood {
 
         // set up the board
         BoardLayersListener boardView = new BoardLayersListener();
-        boardView.makeGUI();
         Board boardStats = new Board();
         BoardCreator fill = new BoardCreator();
         boardStats = fill.parseBoard();
