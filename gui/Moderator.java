@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Moderator {
+public class Moderator implements GameActionListener {
     private Board board;
     private BoardLayersListener boardView;
     private View view;
@@ -15,11 +15,22 @@ public class Moderator {
     private Player[] playerList;
     private int dayCount;
 
+    private String currentCommand = null;
+
     public Moderator(BoardLayersListener boardView, Board board, View view) {
         this.boardView = boardView;
         this.board = board;
         this.view = view;
         this.gameRunning = true;
+    }
+
+    @Override
+    public void getInput(String action) {
+        currentCommand = action;
+    }
+
+    public void setBoardView(BoardLayersListener boardView) {
+        this.boardView = boardView;
     }
 
     // start the game, includes the loop until game over
@@ -84,9 +95,21 @@ public class Moderator {
 
             // Player's turn loop
             while (turnActive && gameRunning) {
+                currentCommand = null; // Reset command before waiting for a new one
+
+                // Wait until a command is received
+                while (currentCommand == null) {
+                    try {
+                        Thread.sleep(100); // Polling every 100ms instead of blocking
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
                 view.displayMessage("\nEnter a command (type 'help' for options):");
-                String input = view.getUserInput();
-                turnActive = handleInput(input, playerList, currentPlayer);
+                // String input = view.getUserInput();
+                turnActive = handleInput(currentCommand, playerList, currentPlayer);
             }
 
             // Move to the next player after their turn ends

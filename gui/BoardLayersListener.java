@@ -13,6 +13,10 @@ import java.util.List;
 // View: handles UI
 // JFrame: main window
 public class BoardLayersListener extends JFrame {
+   // listeners
+   private boardMouseListener mouseListener;
+   private GameActionListener gameActionListener;
+
    // default data types
    private static int numPlayers;
    // helpers for player dice rank (0-5 representing rank 1-6)
@@ -57,9 +61,13 @@ public class BoardLayersListener extends JFrame {
    private static ImageIcon board;  // board
 
    // Constructor
-   public BoardLayersListener() {
+   public BoardLayersListener(GameActionListener listener) {
       // Set the title of the JFrame
       super("Deadwood");
+
+      // set the listener
+      this.gameActionListener = listener;
+
       // Set the exit option for the JFrame
       setDefaultCloseOperation(EXIT_ON_CLOSE);
     
@@ -595,29 +603,48 @@ public class BoardLayersListener extends JFrame {
 
    // This class implements Mouse Events
    class boardMouseListener implements MouseListener{
+      private List<GameActionListener> listeners = new ArrayList<>();
+
+      public void addGameActionListener(GameActionListener listener) {
+         listeners.add(listener);
+     }
+ 
+     private void notifyListeners(String action) {
+         for (GameActionListener listener : listeners) {
+             listener.getInput(action);
+         }
+     }
+
       // Code for the different button clicks
       public void mouseClicked(MouseEvent e) { 
          if (e.getSource() == bAct) {
             playerLabel.setVisible(true);
             displayMessage("Act selected");
+            notifyListeners("act");
          }
          else if (e.getSource() == bRehearse) {
             displayMessage("Rehearse selected");
+            notifyListeners("rehearse");
          }
          else if (e.getSource() == bMove) {
             displayMessage("Move selected");
+            notifyListeners("move");
          }
          else if (e.getSource() == bUpgrade) {
             displayMessage("Upgrade selected");
+            notifyListeners("upgrade");
          }
          else if (e.getSource() == bTakeRole) {
             displayMessage("Take Role selected");
+            notifyListeners("takeRole");
          }
          else if (e.getSource() == bEndTurn) {
             displayMessage("End turn selected");
+            notifyListeners("end turn");
          }
          else if (e.getSource() == bEndGame) {
             displayMessage("End game selected");
+            notifyListeners("end game");
          }
       }
 
@@ -666,6 +693,16 @@ public class BoardLayersListener extends JFrame {
       // set the players
       adjustPlayerCount(numPlayers);
 
+      boardMouseListener mouseListener = new boardMouseListener();
+      mouseListener.addGameActionListener(gameActionListener);
+
+      bAct.addMouseListener(mouseListener);
+      bRehearse.addMouseListener(mouseListener);
+      bMove.addMouseListener(mouseListener);
+      bUpgrade.addMouseListener(mouseListener);
+      bTakeRole.addMouseListener(mouseListener);
+      bEndTurn.addMouseListener(mouseListener);
+      bEndGame.addMouseListener(mouseListener);
 
       // // example of how to remove a single take
       // removeTake(activeTakeLabels[0]);
