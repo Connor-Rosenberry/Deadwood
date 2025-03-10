@@ -55,7 +55,7 @@ public class Moderator implements GameActionListener {
         for(int i = 0; i < numPlayers; i++) {
             // view.displayMessage("what is player " + (i + 1) + "'s name?");
             // String input = view.getUserInput();
-            String input = "player " + i;
+            String input = "player " + (i + 1);
 
             Player player = new Player(input);
             playerList[i] = player;
@@ -90,7 +90,8 @@ public class Moderator implements GameActionListener {
         while (gameRunning) {
             // view.displayMessage("It's " + playerList[currentPlayer].getName() + "'s turn.");
             boardView.setActivePlayer(currentPlayer, playerList[currentPlayer].getRank() - 1);
-            System.out.println("active player is " + playerList[currentPlayer].getName());
+            // System.out.println("active player is " + playerList[currentPlayer].getName());
+            BoardLayersListener.displayMessage("It is player " + playerList[currentPlayer].getName() + "'s turn!");
 
             boolean turnActive = true;
 
@@ -107,8 +108,8 @@ public class Moderator implements GameActionListener {
                     }
                 }
 
-
                 view.displayMessage("\nEnter a command (type 'help' for options):");
+                BoardLayersListener.displayMessage("Enter a command");
                 // String input = view.getUserInput();
                 turnActive = handleInput(currentCommand, playerList, currentPlayer);
             }
@@ -299,8 +300,10 @@ public class Moderator implements GameActionListener {
         else if (command.get(0).equals("rehearse")) {
             // attempt to let the player rehearse
             view.displayMessage("rehearse command selected.");
+            BoardLayersListener.displayMessage("rehearse command selected.");
             if(playerList[currentPlayer].getRole() == null) {
                 view.displayMessage("Must \"work\" a role before rehearsing");
+                BoardLayersListener.displayMessage("Must \\\"work\\\" a role before rehearsing");
                 return true;
             }
             
@@ -325,6 +328,7 @@ public class Moderator implements GameActionListener {
         else if (String.join(" ", command).equals("end turn")) {
             // ends the current players turn
             view.displayMessage(playerList[currentPlayer].getName() + "'s turn has ended.");
+            BoardLayersListener.displayMessage(playerList[currentPlayer].getName() + "'s turn has ended.");
             return false;
         }
         else if (String.join(" ", command).equals("end day")) {
@@ -337,6 +341,7 @@ public class Moderator implements GameActionListener {
             // ends the game and moves to scoring
             gameRunning = false;
             view.displayMessage("Game Over");
+            BoardLayersListener.displayMessage("Game Over");
             return false;
         } 
         else if (command.get(0).equals("help")) {
@@ -451,7 +456,14 @@ public class Moderator implements GameActionListener {
         currentPlayer.getRole().setActor(currentPlayer);
 
         if(onCard) {
-            // movePlayerOnCardRole();
+            // get correct cords
+            int setX = location.getX();
+            int setY = location.getY();
+            int roleX = role.getX();
+            int roleY = role.getY();
+            int roleW = role.getW();
+            int roleH = role.getH();
+            BoardLayersListener.movePlayerOnCardRole(setX, setY, roleX, roleY, roleW, roleH);
         } else {  
             int x = role.getX();
             int y = role.getY();
@@ -461,10 +473,11 @@ public class Moderator implements GameActionListener {
         }
 
         view.displayMessage("Player is now working " + role.getName());
+        BoardLayersListener.displayMessage("This role's rank is too high");
 
         // if the player has already moved then their turn is over
         if(currentPlayer.getHasMoved() == true) {
-            view.displayMessage("Because you have already moved your turn is over");
+            view.displayMessage("Player is now working " + role.getName());
             return false;
         }
         return true;
@@ -532,9 +545,11 @@ public class Moderator implements GameActionListener {
         int chips = role.getPracticeChips();
         if(chips < role.getScene().getBudget()) {
             role.setPracticeChips(chips + 1);
+            BoardLayersListener.displayMessage("You rehearsed and now have" + role.getPracticeChips() + " practice chips!");
             return false;
         }
         view.displayMessage("You already have the max amount of practice chips, please act");
+        BoardLayersListener.displayMessage("You already have the max amount of practice chips, please act");
         return true;
     }
 
@@ -642,34 +657,37 @@ public class Moderator implements GameActionListener {
     }
 
     private void endGame() {
-    List<Player> winners = new ArrayList<>();
-    int winningScore = 0;
+        List<Player> winners = new ArrayList<>();
+        int winningScore = 0;
 
-    // Determine the highest score
-    for (Player player : playerList) {
-        int dollars = player.getDollars();
-        int credits = player.getCredits();
-        int rank = player.getRank();
-        int score = dollars + credits + (rank * 5);
+        // Determine the highest score
+        for (Player player : playerList) {
+            int dollars = player.getDollars();
+            int credits = player.getCredits();
+            int rank = player.getRank();
+            int score = dollars + credits + (rank * 5);
 
-        if (score > winningScore) {
-            winningScore = score;
-            winners.clear(); // Clear previous winners
-            winners.add(player);
-        } else if (score == winningScore) {
-            winners.add(player); // Add to winners list in case of a tie
+            if (score > winningScore) {
+                winningScore = score;
+                winners.clear(); // Clear previous winners
+                winners.add(player);
+            } else if (score == winningScore) {
+                winners.add(player); // Add to winners list in case of a tie
+            }
         }
-    }
 
-    // Display the winner(s)
-    if (winners.size() == 1) {
-        view.displayMessage("The winner is " + winners.get(0).getName() + " with a score of " + winningScore);
-    } else {
-        String winnerNames = winners.stream()
-                                    .map(Player::getName)
-                                    .collect(Collectors.joining(", "));
-        view.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
-    }
+        // Display the winner(s)
+        if (winners.size() == 1) {
+            view.displayMessage("The winner is " + winners.get(0).getName() + " with a score of " + winningScore);
+            BoardLayersListener.displayMessage("The winner is " + winners.get(0).getName() + " with a score of " + winningScore);
+        } else {
+            String winnerNames = winners.stream()
+                                        .map(Player::getName)
+                                        .collect(Collectors.joining(", "));
+            view.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
+            BoardLayersListener.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
+        }
+        BoardLayersListener.gameOver();
     }
 
     // GETS/SETS

@@ -2,6 +2,9 @@ package gui;
 
 import java.awt.*;
 import javax.swing.*;
+
+import gui.BoardLayersListener.boardMouseListener;
+
 import javax.imageio.ImageIO;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -321,7 +324,7 @@ public class BoardLayersListener extends JFrame {
       return;
    }
 
-   // TAKES
+   // TAKES - might hav eto change to maintain MVC
 
    // set up the takes for the set associated w takes (shot counter)
    public static JLabel[] setTakes(Take[] takes) {
@@ -578,14 +581,7 @@ public class BoardLayersListener extends JFrame {
    }
 
    // move a player to the given on card role set to the given set
-   public static void movePlayerOnCardRole(Role role, Set set) {
-      // get correct cords
-      int setX = set.getX();
-      int setY = set.getY();
-      int roleX = role.getX();
-      int roleY = role.getY();
-      int roleW = role.getW();
-      int roleH = role.getH();
+   public static void movePlayerOnCardRole(int setX, int setY, int roleX, int roleY, int roleW, int roleH) {
 
       // move the current player label with the right rank to the given role
       playerLabel.setBounds(setX + roleX, setY + roleY, roleW, roleH);
@@ -752,5 +748,28 @@ public class BoardLayersListener extends JFrame {
    public static void setPlayerLocation(int x, int y) {
       // maybe loop through player positions to check if there is already a player at location
       playerLabel.setBounds(x, y, 40, 40);
+   }
+
+   public static void gameOver() {
+      bAct.setEnabled(false);
+      bRehearse.setEnabled(false);
+      bMove.setEnabled(false);
+      bUpgrade.setEnabled(false);
+      bTakeRole.setEnabled(false);
+      bEndTurn.setEnabled(false);
+      bEndGame.setEnabled(false);
+
+      int response = JOptionPane.showConfirmDialog(
+      null,
+      "Click to close application",
+      "Game Over!",
+      JOptionPane.YES_NO_OPTION,
+      JOptionPane.WARNING_MESSAGE
+      );
+
+      if (response == JOptionPane.YES_OPTION) {
+         System.exit(0); // Close the game
+      }
+
    }
 }
