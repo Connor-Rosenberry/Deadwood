@@ -9,14 +9,11 @@ public class Deadwood {
         BoardCreator fill = new BoardCreator();
         boardStats = fill.parseBoard();
 
-        View view = new View();
-        Moderator moderator = new Moderator(null, boardStats, view);
+        Moderator moderator = new Moderator(null, boardStats);
 
         BoardLayersListener boardView = new BoardLayersListener(moderator);
         moderator.setBoardView(boardView);
 
-        // start the game
-        view.startGame();
         moderator.startGame();
     }
 }

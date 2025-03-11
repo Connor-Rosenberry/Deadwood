@@ -10,7 +10,6 @@ import java.util.List;
 public class Moderator implements GameActionListener {
     private Board board;
     private BoardLayersListener boardView;
-    private View view;
     private boolean gameRunning;
     private Scene[] sceneList;
     private Player[] playerList;
@@ -18,10 +17,9 @@ public class Moderator implements GameActionListener {
 
     private String currentCommand = null;
 
-    public Moderator(BoardLayersListener boardView, Board board, View view) {
+    public Moderator(BoardLayersListener boardView, Board board) {
         this.boardView = boardView;
         this.board = board;
-        this.view = view;
         this.gameRunning = true;
     }
 
@@ -113,7 +111,6 @@ public class Moderator implements GameActionListener {
                     }
                 }
 
-                view.displayMessage("\nEnter a command (type 'help' for options):");
                 BoardLayersListener.displayMessage("Enter a command");
                 // String input = view.getUserInput();
                 turnActive = handleInput(currentCommand, playerList, currentPlayer);
@@ -208,12 +205,10 @@ public class Moderator implements GameActionListener {
     
         if (input.equals("move")) {
             if(playerList[currentPlayer].getHasMoved() == true) {
-                view.displayMessage("Player has already moved, please pick a different command");
                 BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
                 return true;
             }
             if(playerList[currentPlayer].getRole() != null) {
-                view.displayMessage("cannot move while working");
                 BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
                 return true;
             }
@@ -224,42 +219,15 @@ public class Moderator implements GameActionListener {
 
             return true;
 
-        } 
-        else if (String.join(" ", command).equals("all players locations")) {
-            // display the location of all players
-            for (Player player : playerList) {
-                view.displayMessage(player.getName() + " is in " + 
-                    (player.getLocation() != null ? player.getLocation().getName() : "an unknown location"));
-            }
-            return true;
-
-        } 
-        else if (String.join(" ", command).equals("active player")) {
-            // display information about the active player
-            view.displayMessage(playerList[currentPlayer].getName() + " is in " + 
-                (playerList[currentPlayer].getLocation().getName()) + "\nThey have " + playerList[currentPlayer].getDollars() + " dollars and " + playerList[currentPlayer].getCredits() + " credits and they are rank " + playerList[currentPlayer].getRank());
-                if(playerList[currentPlayer].getRole() != null) {
-                    view.displayMessage("\n they are also working the " + playerList[currentPlayer].getRole().getName() + " role");
-                }
-            return true;
-
-        } 
-        else if (String.join(" ", command).equals("adjacent rooms")) {
-            // display the adjacent rooms from the current players location
-            view.displayMessage(Arrays.toString(playerList[currentPlayer].getLocation().getNeighbors()));
-            return true;
-        } 
+        }
         else if (command.get(0).equals("work")) {
-            view.displayMessage("Work command selected.");
             if(playerList[currentPlayer].getRole() != null) {
-                view.displayMessage("You are already working, you can act or rehearse");
                 BoardLayersListener.displayMessage("You are already working, you can act or rehearse");
                 return true;
             }
             
             // player must be at a location with roles
             if(playerList[currentPlayer].getLocation().getName().equals("office") || playerList[currentPlayer].getLocation().getName().equals("trailer")) {
-                view.displayMessage("Must be at a location with roles to work");
                 BoardLayersListener.displayMessage("Must be at a location with roles to work");
                 return true;
             }
@@ -267,18 +235,11 @@ public class Moderator implements GameActionListener {
             // get the active players location
             Set location = (Set) playerList[currentPlayer].getLocation(); 
             Scene locationScene = location.getScene();
-            
-            // display the available roles
-            // if (commandLength == 1) {
-            //     view.displayMessage("Please specify a role to work, the options are \n" + Arrays.toString(location.getRoleNames()) + Arrays.toString(locationScene.getRoleNames()));
-            //     return true;
-            // }
 
             // wanted to try something new "Stream" the arrays together
             String[] combinedRoles = Stream.concat(Arrays.stream(location.getRoleNames()), Arrays.stream(locationScene.getRoleNames())).toArray(String[]::new);
 
             // get the requested destination and attempt to let the player work there
-            // String destination = String.join(" ", command.subList(1, commandLength));
 
             String destination = BoardLayersListener.roomSelection(combinedRoles);
             int commaIndex = destination.indexOf(",");
@@ -290,56 +251,38 @@ public class Moderator implements GameActionListener {
         }
         else if (command.get(0).equals("act")) {
             // attempt to let the player act
-            view.displayMessage("act command selected.");
-            if(playerList[currentPlayer].getRole() == null) {
-                view.displayMessage("Must \"work\" a role before acting");
-                return true;
-            }
             return act(playerList[currentPlayer]);
 
         } 
         else if (command.get(0).equals("rehearse")) {
             // attempt to let the player rehearse
-            view.displayMessage("rehearse command selected.");
             BoardLayersListener.displayMessage("rehearse command selected.");
             if(playerList[currentPlayer].getRole() == null) {
-                view.displayMessage("Must \"work\" a role before rehearsing");
                 BoardLayersListener.displayMessage("Must \\\"work\\\" a role before rehearsing");
                 return true;
             }
-            
             return rehearse(playerList[currentPlayer]);
-
         }  
         else if (command.get(0).equals("upgrade")) {
             // attempt to let the player upgrade
-            view.displayMessage("Upgrade command selected.");
             CastingOffice office = (CastingOffice) board.getRooms()[10];
             if(playerList[currentPlayer].getLocation() != office) {
-                view.displayMessage("Cannot upgrade unless at casting office");
                 BoardLayersListener.displayMessage("cannot upgrade Unless at casting office");
                 return true;
             }
-            
             // get upgrade info from the player and attempt to upgrade rank
-            view.displayMessage("Enter the rank you would like and if you want to pay will dollars or credits: Ex. \"3 dollar\"");
             BoardLayersListener.displayMessage("Please enter the rank you would like and what you would like to purchase it with");
-
-            // maybe add a method that displays teh current players dollars and credits
             String[] upgrades = {"2 dollars", "3 dollars", "4 dollars", "5 dollars", "6 dollars", "2 credits", "3 credits", "4 credits", "5 credits", "6 credits"};
             String destination = BoardLayersListener.upgradeSelection(upgrades);
             return tryUpgrade(playerList[currentPlayer], office, destination);
-
         } 
         else if (String.join(" ", command).equals("end turn")) {
             // ends the current players turn
-            view.displayMessage(playerList[currentPlayer].getName() + "'s turn has ended.");
             BoardLayersListener.displayMessage(playerList[currentPlayer].getName() + "'s turn has ended.");
             return false;
         }
         else if (String.join(" ", command).equals("end day")) {
             // ends the current day and starts a new one
-            view.displayMessage("Day is over");
             BoardLayersListener.displayMessage("Day is over");
             sceneList = startDay(sceneList, playerList);
             return false;
@@ -347,17 +290,10 @@ public class Moderator implements GameActionListener {
         else if (String.join(" ", command).equals("end game")) {
             // ends the game and moves to scoring
             gameRunning = false;
-            view.displayMessage("Game Over");
             BoardLayersListener.displayMessage("Game Over");
             return false;
         } 
-        else if (command.get(0).equals("help")) {
-            // provides a list of commands
-            view.displayMessage("Available commands: all players locations, active player, adjacent rooms, move <destination>, work, act, rehearse, upgrade, end turn, end day, end game");
-            return true;
-        } 
         else {
-            view.displayMessage("Unknown command. Type 'help' for options.");
             return true;
         }
     }
@@ -365,40 +301,23 @@ public class Moderator implements GameActionListener {
     // check the active players input and validate a move to a new location
     private boolean move(Player currentPlayer, String destination) {
         
-        // check if the requested move is legal
-        boolean legalMove = false;
-        for(int i = 0; i < currentPlayer.getLocation().getNeighbors().length; i ++) {
-            if(currentPlayer.getLocation().getNeighbors()[i].equals(destination)) {
-                legalMove = true;
-            }
-        }
-        if(!legalMove) {
-            view.displayMessage("The destination is not an adjacent move");
-            return false;
-        }
-        
         // if it is, loop through the rooms and set players location to the new room
         for(int i = 0; i < board.getRooms().length; i++) {
             if(board.getRooms()[i].getName().equals(destination)) {
-                view.displayMessage("Player has moved from: " + currentPlayer.getLocation().getName() + " to " + board.getRooms()[i].getName());
 
                 // if the location has a scene card
                 if(board.getRooms()[i].getName().equals("office") == false && board.getRooms()[i].getName().equals("trailer") == false) {
                     Set set = (Set) board.getRooms()[i];
                     if(set.getStatus().equals("not active")) {
-                        view.displayMessage("Scene card flipped");
                         BoardLayersListener.flipCard(i);
                         set.setStatus("active");
                     }
                 }
-
                 currentPlayer.setLocation(board.getRooms()[i]);
                 currentPlayer.setHasMoved(true);
-
             }
         }
         BoardLayersListener.setPlayerLocation(currentPlayer.getLocation().getX(), currentPlayer.getLocation().getY());
-
         return true;
     }
 
@@ -411,15 +330,11 @@ public class Moderator implements GameActionListener {
         Scene locationScene = location.getScene();
         Role[] sceneRoles = locationScene.getRoles();
         boolean onCard = false;
-
         Role role = null;
-
-        // get the role
 
         // check each board role
         for(int i = 0; i < boardRoles.length; i++) {
-            
-            // if the destination is a valid roll
+            // if the destination is a valid role
             if(boardRoles[i].getName().equals(destination)) {
                 role = boardRoles[i];
             }
@@ -427,7 +342,6 @@ public class Moderator implements GameActionListener {
         
         // then check each card role
         for(int i = 0; i < sceneRoles.length; i++) {
-            
             // if the destination is a valid roll
             if(sceneRoles[i].getName().equals(destination)) {
                 role = sceneRoles[i];
@@ -435,26 +349,16 @@ public class Moderator implements GameActionListener {
             }
         }
 
-        // roles should always be valid
-        // if not a valid role
-        // if(role == null) {
-        //     view.displayMessage("The role you entered does not exist at this location \n roles at this location are " + Arrays.toString(location.getRoleNames()) + Arrays.toString(locationScene.getRoleNames()));
-        //     return true;
-        // }
-
         // check if the scene is wrapped, role is taken, or if player rank is too low
         if(role.getScene().getStatus().equals("wrapped")) {
-            view.displayMessage("the scene for this room has been wrapped");
             BoardLayersListener.displayMessage("the scene for this room has been wrapped");
             return true;
         }
         if(role.getActor() != null) {
-            view.displayMessage("This role is already taken");
             BoardLayersListener.displayMessage("This role is already taken");
             return true;
         }
         if(role.getRankToAct() > currentPlayer.getRank()) {
-            view.displayMessage("This role's rank is too high");
             BoardLayersListener.displayMessage("This role's rank is too high");
             return true;
         }
@@ -479,13 +383,11 @@ public class Moderator implements GameActionListener {
             int h = role.getH();
             BoardLayersListener.movePlayerOffCardRole(x, y, w, h);
         }
-
-        view.displayMessage("Player is now working " + role.getName());
-        BoardLayersListener.displayMessage("This role's rank is too high");
+        BoardLayersListener.displayMessage("Player is now working " + role.getName());
 
         // if the player has already moved then their turn is over
         if(currentPlayer.getHasMoved() == true) {
-            view.displayMessage("Player is now working " + role.getName());
+            BoardLayersListener.displayMessage("Player has moved, so their turn is over");
             return false;
         }
         return true;
@@ -494,20 +396,9 @@ public class Moderator implements GameActionListener {
     // validate that the player meets the requirements to upgrade and then increase rank
     private boolean tryUpgrade(Player player, CastingOffice office, String request) {
         String[] parts = request.split("\\s+"); // Split by spaces
-        // if (parts.length < 2) {
-        //     view.displayMessage("Invalid input format");
-        //     return true;
-        // }
         try {
             int rank = Integer.parseInt(parts[0]);
             String type = parts[1];    
-
-            // if(type.equals("dollars") == false && type.equals("credits") == false) {
-            //     view.displayMessage("Invalid Type: \"dollar\" or \"credit\"");
-            //     return true;
-            // }
-
-            view.displayMessage("Attempting to upgrade to rank " + rank + " from a current rank of " + player.getRank());
             BoardLayersListener.displayMessage("Attempting to upgrade to rank " + rank + " from a current rank of " + player.getRank());
 
             // get the rank that the user requested
@@ -515,7 +406,6 @@ public class Moderator implements GameActionListener {
             Rank requestedRank = ranks[rank-2];
 
             if(requestedRank.getRankLevel() <= player.getRank()) {
-                view.displayMessage("you are already this rank or higher");
                 BoardLayersListener.displayMessage("you are already this rank or higher");
                 return true;
             }
@@ -523,7 +413,6 @@ public class Moderator implements GameActionListener {
             // if they want to upgrade with dollars
             if(type.equals("dollars")) {
                 if(player.getDollars() < requestedRank.getDollarCost()) {
-                    view.displayMessage("You do not have enough dollars to upgrade, you need " + requestedRank.getDollarCost() + " for rank " + requestedRank.getRankLevel());
                     BoardLayersListener.displayMessage("You do not have enough dollars to upgrade, you need " + requestedRank.getDollarCost() + " for rank " + requestedRank.getRankLevel());
                     return true;
                 }
@@ -536,7 +425,6 @@ public class Moderator implements GameActionListener {
             // if they want to upgrade with credits
             if(type.equals("credits")) {
                 if(player.getCredits() < requestedRank.getCreditCost()) {
-                    view.displayMessage("You do not have enough credits to upgrade, you need " + requestedRank.getCreditCost() + " for rank " + requestedRank.getRankLevel());
                     BoardLayersListener.displayMessage("You do not have enough credits to upgrade, you need " + requestedRank.getCreditCost() + " for rank " + requestedRank.getRankLevel());
                     return true;
                 }
@@ -545,11 +433,9 @@ public class Moderator implements GameActionListener {
                 BoardLayersListener.increasePlayersRank(player.getPlayerIndex(), requestedRank.getRankLevel() - 1);
                 player.setCredits(newCreditAmount);
             }
-            view.displayMessage("Player is now rank " + player.getRank());
             BoardLayersListener.displayMessage("Player is now rank " + player.getRank());
             return true;
         } catch (NumberFormatException e) {
-            view.displayMessage("Invalid number format: " + parts[0]);
             return true;
         }
     }
@@ -563,18 +449,14 @@ public class Moderator implements GameActionListener {
         
         // role dice to act
         if((diceRoll + role.getPracticeChips()) < scene.getBudget()) {
-            view.displayMessage("you rolled a " + diceRoll + " and have " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget() + " better luck next time");
             BoardLayersListener.displayMessage("you rolled a " + diceRoll + " and have " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget() + " better luck next time");
             return false;
         }
-
-        view.displayMessage("Congratulations you rolled a " + diceRoll + " and have + " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget());
         BoardLayersListener.displayMessage("Congratulations you rolled a " + diceRoll + " and have + " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget());
 
         // if success then remove shot counter
         int shots = scene.getShotCounter();
         scene.setShotCounter(shots-1);
-        view.displayMessage("This scene has " + scene.getShotCounter() + " shots left");
 
         // remove take in gui
         for(int i = 0; i < board.getRooms().length; i++) {
@@ -617,7 +499,6 @@ public class Moderator implements GameActionListener {
             BoardLayersListener.displayMessage("You rehearsed and now have " + role.getPracticeChips() + " practice chips!");
             return false;
         }
-        view.displayMessage("You already have the max amount of practice chips, please act");
         BoardLayersListener.displayMessage("You already have the max amount of practice chips, please act");
         return true;
     }
@@ -637,22 +518,18 @@ public class Moderator implements GameActionListener {
         }
 
         if(!playerOnCard) {
-            view.displayMessage("there is no one on a on card role, therefore no bonus payment");
             BoardLayersListener.displayMessage("there is no one on a on card role, therefore no bonus payment");
         }
 
         // on card bonuses
         if(playerOnCard) {
             int[] rolls = new int[scene.getBudget()];
-            view.displayMessage("active player gets to roll " + scene.getBudget() + " dice");
             BoardLayersListener.displayMessage("active player gets to roll " + scene.getBudget() + " dice");
-
             Dice dice = new Dice();
             
             // get and sort the rolls depending on the budget
             for(int i = 0; i < scene.getBudget(); i++) {
                 int value = dice.roll();
-                view.displayMessage("you rolled a " + value);
                 BoardLayersListener.displayMessage("you rolled a " + value);
                 rolls[i] = value;
             }
@@ -700,7 +577,6 @@ public class Moderator implements GameActionListener {
                 int x = activePlayer.getLocation().getX();
                 int y = activePlayer.getLocation().getY();
                 BoardLayersListener.removePlayerFromScene(index, rank - 1, x, y);
-
                 scene.getRoles()[i].getActor().setRole(null);
             }
         }
@@ -716,7 +592,6 @@ public class Moderator implements GameActionListener {
                 int x = activePlayer.getLocation().getX();
                 int y = activePlayer.getLocation().getY();
                 BoardLayersListener.removePlayerFromScene(index, rank - 1, x, y);
-
                 offCard.getRoles()[i].getActor().setRole(null);
                 offCard.getRoles()[i].setActor(null);
             }
@@ -736,7 +611,6 @@ public class Moderator implements GameActionListener {
             // if all scenes wrapped besides one, then start a new day
             sceneList = startDay(sceneList, playerList);
         }
-
         // remove the players from roles
         BoardLayersListener.removeSceneCard(room);
     }
@@ -776,13 +650,11 @@ public class Moderator implements GameActionListener {
 
         // Display the winner(s)
         if (winners.size() == 1) {
-            view.displayMessage("The winner is " + winners.get(0).getName() + " with a score of " + winningScore);
             BoardLayersListener.displayMessage("The winner is " + winners.get(0).getName() + " with a score of " + winningScore);
         } else {
             String winnerNames = winners.stream()
                                         .map(Player::getName)
                                         .collect(Collectors.joining(", "));
-            view.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
             BoardLayersListener.displayMessage("It's a tie! The winners are " + winnerNames + " with a score of " + winningScore);
         }
         BoardLayersListener.gameOver();
