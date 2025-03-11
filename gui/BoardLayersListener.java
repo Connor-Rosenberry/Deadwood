@@ -257,6 +257,7 @@ public class BoardLayersListener extends JFrame {
          cardLabel.setIcon(cardIcon);
          cardLabel.setBounds(x, y, cardIcon.getIconWidth(), cardIcon.getIconHeight());
          cardLabel.setOpaque(true);
+         cardLabel.setVisible(false);
 
          // Add the card to the lower layer
          boardPane.add(cardLabel, Integer.valueOf(1));
@@ -295,12 +296,14 @@ public class BoardLayersListener extends JFrame {
 
    // remove just one scene card, from the given JLabel
    // NOTE: be careful to track what scenes have already been removed
-   public static void removeSceneCard(JLabel cardLabel) {
-      if (cardLabel == null) {
-         // for array/loop handling, no card to remove
-         return;
-      }
-      boardPane.remove(cardLabel);
+   public static void removeSceneCard(int room) {
+      
+      
+      // if (cardLabel == null) {
+      //    // for array/loop handling, no card to remove
+      //    return;
+      // }
+      boardPane.remove(activeCardLabels[room]);
 
       boardPane.revalidate();
       boardPane.repaint();
@@ -310,11 +313,11 @@ public class BoardLayersListener extends JFrame {
    // remove just one scene card AND its takes, from the given JLabel
    // NOTE: be careful to track what scenes have already been removed
    public static void removeSceneCard(JLabel cardLabel, JLabel[]takeLabels) {
-      if (cardLabel == null) {
-         // for array/loop handling, no card to remove
-         clearTakes(takeLabels);
-         return;
-      }
+      // if (cardLabel == null) {
+      //    // for array/loop handling, no card to remove
+      //    clearTakes(takeLabels);
+      //    return;
+      // }
       
       boardPane.remove(cardLabel);
       clearTakes(takeLabels);
@@ -353,22 +356,33 @@ public class BoardLayersListener extends JFrame {
    // remove one of the takes for the set associated w takes (shot counter)
    // WARNING: does not error check for if there are no more shots to remove
    // returns updated JLabel (where shot is removed from)
-   public static JLabel[] removeTake(JLabel[] takeLabels) {
-      // if necessary, get to the take that needs to be deleted
-      int i = takeLabels.length - 1;  // xml puts takes in backwards order
-      while (i >= 0 && takeLabels[i] == null) {
-         i--;
-      }
-      if (i >= 0) {
-         // there is a take to remove
-         boardPane.remove(takeLabels[i]);
-         takeLabels[i] = null;  // set to null as it has been deleted
-      }
-
+   public static void removeTake(int room, int shotsLeft) {
+      boardPane.remove(activeTakeLabels[room][shotsLeft]);
+      activeTakeLabels[room][shotsLeft] = null;
       boardPane.revalidate();
       boardPane.repaint();
-      return takeLabels;
    }
+
+   //debug method can delete later
+   public static void printActiveTakeLabels() {
+      System.out.println("Printing activeTakeLabels:");
+  
+      for (int i = 0; i < activeTakeLabels.length; i++) {
+          System.out.print("Room " + i + ": ");
+          
+          // Check if the row (room) is null (uninitialized)
+          if (activeTakeLabels[i] == null) {
+              System.out.println("No takes");
+              continue;
+          }
+  
+          for (int j = 0; j < activeTakeLabels[i].length; j++) {
+              System.out.print((activeTakeLabels[i][j] != null ? "[Take Exists]" : "[null]") + " ");
+          }
+          
+          System.out.println(); // Move to the next line for the next room
+      }
+  }
 
    // removes all takes from the given set
    // NOTE: be careful to track what scenes have already been removed
@@ -555,15 +569,17 @@ public class BoardLayersListener extends JFrame {
    // increase a given players rank (and dice display)
    // player is 1-8 (do not consider 0 indexing for param)
    // TODO
-   public static void increasePlayersRank(int playerNum) {
-      playerDieLevel[playerNum - 1]++;
+   public static void increasePlayersRank(int playerNum, int requestedRank) {
       // TODO update players dice display wherever it is
       // for the given player (to update their dice on the screen) (always in same spot in casting office when upgrading):
       // increase playerDieLevel[playerNum - 1]++;
       // in the playerLabels[playerNum-1][playerDieLevel[playerNum - 1] (the players new Jframe for their upgraded rank)
       // make the old Jframe not visible
       // set the new Jframe to the casting office location and make visible (call move after it's implemented)
-
+      playerLabel.setVisible(false);
+      playerLabels[playerNum][requestedRank].setVisible(true);
+      playerLabels[playerNum][requestedRank].setBounds(playerLabel.getBounds());
+      playerLabel = playerLabels[playerNum][requestedRank];
    }
 
    // move a player to the given room, specifiying how many players are already here
@@ -732,8 +748,8 @@ public class BoardLayersListener extends JFrame {
       // prompt user
       String selection = (String) JOptionPane.showInputDialog(
          null,
-         "What room would you like to move to",
-         "Move selection",
+         "What job would you like?",
+         "Job selection selection",
          JOptionPane.QUESTION_MESSAGE,
          null,
          roles,
@@ -745,9 +761,37 @@ public class BoardLayersListener extends JFrame {
       return selection;
    }
 
+   public static String upgradeSelection(String[] upgrades) {
+      // prompt user
+      String selection = (String) JOptionPane.showInputDialog(
+         null,
+         "What rank would you like to upgrade to?",
+         "Upgrade selection",
+         JOptionPane.QUESTION_MESSAGE,
+         null,
+         upgrades,
+         upgrades[0]);
+      if (selection == null) {
+         // player didn't select
+         return "";  // default option
+      }
+      return selection;
+   }
+
+   // for the following two methods create a method that loops through the players
+   // and checks to see if a player is already on that location, if they are
+   // then move the new player a couple pixels to the side
    public static void setPlayerLocation(int x, int y) {
       // maybe loop through player positions to check if there is already a player at location
       playerLabel.setBounds(x, y, 40, 40);
+   }
+
+   public static void removePlayerFromScene(int player, int rank, int x, int y) {
+      playerLabels[player][rank].setBounds(x, y, 40, 40);
+   }
+
+   public static void flipCard(int card) {
+      activeCardLabels[card].setVisible(true);
    }
 
    public static void gameOver() {

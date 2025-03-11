@@ -57,7 +57,7 @@ public class Moderator implements GameActionListener {
             // String input = view.getUserInput();
             String input = "player " + (i + 1);
 
-            Player player = new Player(input);
+            Player player = new Player(input, i);
             playerList[i] = player;
             if(numPlayers == 5) {
                 player.setCredits(2);
@@ -68,6 +68,11 @@ public class Moderator implements GameActionListener {
             if(numPlayers >= 7) {
                 player.setRank(2);
             }
+
+
+
+
+            player.setDollars(100);
         }
 
         // create scene cards
@@ -150,7 +155,8 @@ public class Moderator implements GameActionListener {
         Set[] sets = new Set[10];
         for (int i = 0; i < 10; i++) {
             sets[i] = (Set) allRooms[i];
-        } 
+        }
+
         BoardLayersListener.setSceneCards(selectedScenes, sets);
 
         // for the 10 rooms that need scenes assign a scene
@@ -289,12 +295,7 @@ public class Moderator implements GameActionListener {
                 view.displayMessage("Must \"work\" a role before acting");
                 return true;
             }
-            boolean response = playerList[currentPlayer].act(view);
-            if(response == true) {
-                sceneWrap(playerList[currentPlayer].getRole().getScene(), playerList[currentPlayer]);
-            }
-
-            return false;
+            return act(playerList[currentPlayer]);
 
         } 
         else if (command.get(0).equals("rehearse")) {
@@ -316,13 +317,18 @@ public class Moderator implements GameActionListener {
             CastingOffice office = (CastingOffice) board.getRooms()[10];
             if(playerList[currentPlayer].getLocation() != office) {
                 view.displayMessage("Cannot upgrade unless at casting office");
+                BoardLayersListener.displayMessage("cannot upgrade Unless at casting office");
                 return true;
             }
             
             // get upgrade info from the player and attempt to upgrade rank
             view.displayMessage("Enter the rank you would like and if you want to pay will dollars or credits: Ex. \"3 dollar\"");
-            String request = view.getUserInput();
-            return tryUpgrade(playerList[currentPlayer], office, request);
+            BoardLayersListener.displayMessage("Please enter the rank you would like and what you would like to purchase it with");
+
+            // maybe add a method that displays teh current players dollars and credits
+            String[] upgrades = {"2 dollars", "3 dollars", "4 dollars", "5 dollars", "6 dollars", "2 credits", "3 credits", "4 credits", "5 credits", "6 credits"};
+            String destination = BoardLayersListener.upgradeSelection(upgrades);
+            return tryUpgrade(playerList[currentPlayer], office, destination);
 
         } 
         else if (String.join(" ", command).equals("end turn")) {
@@ -334,6 +340,7 @@ public class Moderator implements GameActionListener {
         else if (String.join(" ", command).equals("end day")) {
             // ends the current day and starts a new one
             view.displayMessage("Day is over");
+            BoardLayersListener.displayMessage("Day is over");
             sceneList = startDay(sceneList, playerList);
             return false;
         } 
@@ -380,6 +387,7 @@ public class Moderator implements GameActionListener {
                     Set set = (Set) board.getRooms()[i];
                     if(set.getStatus().equals("not active")) {
                         view.displayMessage("Scene card flipped");
+                        BoardLayersListener.flipCard(i);
                         set.setStatus("active");
                     }
                 }
@@ -486,57 +494,118 @@ public class Moderator implements GameActionListener {
     // validate that the player meets the requirements to upgrade and then increase rank
     private boolean tryUpgrade(Player player, CastingOffice office, String request) {
         String[] parts = request.split("\\s+"); // Split by spaces
-        if (parts.length < 2) {
-            view.displayMessage("Invalid input format");
-            return true;
-        }
+        // if (parts.length < 2) {
+        //     view.displayMessage("Invalid input format");
+        //     return true;
+        // }
         try {
             int rank = Integer.parseInt(parts[0]);
             String type = parts[1];    
 
-            if(type.equals("dollar") == false && type.equals("credit") == false) {
-                view.displayMessage("Invalid Type: \"dollar\" or \"credit\"");
-                return true;
-            }
+            // if(type.equals("dollars") == false && type.equals("credits") == false) {
+            //     view.displayMessage("Invalid Type: \"dollar\" or \"credit\"");
+            //     return true;
+            // }
 
             view.displayMessage("Attempting to upgrade to rank " + rank + " from a current rank of " + player.getRank());
-            
+            BoardLayersListener.displayMessage("Attempting to upgrade to rank " + rank + " from a current rank of " + player.getRank());
+
             // get the rank that the user requested
             Rank[] ranks = office.getRanks();
             Rank requestedRank = ranks[rank-2];
 
             if(requestedRank.getRankLevel() <= player.getRank()) {
                 view.displayMessage("you are already this rank or higher");
+                BoardLayersListener.displayMessage("you are already this rank or higher");
                 return true;
             }
             
             // if they want to upgrade with dollars
-            if(type.equals("dollar")) {
+            if(type.equals("dollars")) {
                 if(player.getDollars() < requestedRank.getDollarCost()) {
                     view.displayMessage("You do not have enough dollars to upgrade, you need " + requestedRank.getDollarCost() + " for rank " + requestedRank.getRankLevel());
+                    BoardLayersListener.displayMessage("You do not have enough dollars to upgrade, you need " + requestedRank.getDollarCost() + " for rank " + requestedRank.getRankLevel());
                     return true;
                 }
+                BoardLayersListener.increasePlayersRank(player.getPlayerIndex(), requestedRank.getRankLevel() - 1);
                 player.setRank(requestedRank.getRankLevel());
                 int newDollarAmount = player.getDollars() - requestedRank.getDollarCost();
                 player.setDollars(newDollarAmount);
             }
             
             // if they want to upgrade with credits
-            if(type.equals("credit")) {
+            if(type.equals("credits")) {
                 if(player.getCredits() < requestedRank.getCreditCost()) {
                     view.displayMessage("You do not have enough credits to upgrade, you need " + requestedRank.getCreditCost() + " for rank " + requestedRank.getRankLevel());
+                    BoardLayersListener.displayMessage("You do not have enough credits to upgrade, you need " + requestedRank.getCreditCost() + " for rank " + requestedRank.getRankLevel());
                     return true;
                 }
                 player.setRank(requestedRank.getRankLevel());
                 int newCreditAmount = player.getCredits() - requestedRank.getCreditCost();
+                BoardLayersListener.increasePlayersRank(player.getPlayerIndex(), requestedRank.getRankLevel() - 1);
                 player.setCredits(newCreditAmount);
             }
             view.displayMessage("Player is now rank " + player.getRank());
+            BoardLayersListener.displayMessage("Player is now rank " + player.getRank());
             return true;
         } catch (NumberFormatException e) {
             view.displayMessage("Invalid number format: " + parts[0]);
             return true;
         }
+    }
+
+    // validate that the player meets the requirements to act and then perform action
+    private boolean act(Player player) {
+        Dice dice = new Dice();
+        int diceRoll = dice.roll();
+        Role role = player.getRole();
+        Scene scene = role.getScene();
+        
+        // role dice to act
+        if((diceRoll + role.getPracticeChips()) < scene.getBudget()) {
+            view.displayMessage("you rolled a " + diceRoll + " and have " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget() + " better luck next time");
+            BoardLayersListener.displayMessage("you rolled a " + diceRoll + " and have " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget() + " better luck next time");
+            return false;
+        }
+
+        view.displayMessage("Congratulations you rolled a " + diceRoll + " and have + " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget());
+        BoardLayersListener.displayMessage("Congratulations you rolled a " + diceRoll + " and have + " + role.getPracticeChips() + " practice chips, the budget was " + scene.getBudget());
+
+        // if success then remove shot counter
+        int shots = scene.getShotCounter();
+        scene.setShotCounter(shots-1);
+        view.displayMessage("This scene has " + scene.getShotCounter() + " shots left");
+
+        // remove take in gui
+        for(int i = 0; i < board.getRooms().length; i++) {
+            if(board.getRooms()[i].getName().equals(player.getLocation().getName())) {
+                BoardLayersListener.removeTake(i, scene.getShotCounter());
+            }
+        }
+        BoardLayersListener.displayMessage("This scene has " + scene.getShotCounter() + " shots left");
+        
+        // if scene is over then wrap it
+        if(shots-1 == 0) {
+            sceneWrap(scene, player);
+        }
+        
+        // otherwise pay player based on on vs off card roles
+        if(role.getOnCard() == true) {
+            if(diceRoll < scene.getBudget()) {
+                return false;
+            }
+            player.addCredits(2);
+            BoardLayersListener.displayMessage("Player " + player.getName() + " received 2 credits! they now have " + player.getCredits() + " credits and " + player.getDollars() + " dollars!");
+        } else {
+            if(diceRoll < scene.getBudget()) {
+                player.addDollars(1);
+                return false;
+            }
+            player.addCredits(1);
+            player.addDollars(1);
+            BoardLayersListener.displayMessage("Player " + player.getName() + " received 1 credits and 1 dollar they now have " + player.getCredits() + " credits and " + player.getDollars() + " dollars!");
+        }
+        return false;
     }
 
     // validate that the player meets the requirements to rehearse and then perform action
@@ -545,7 +614,7 @@ public class Moderator implements GameActionListener {
         int chips = role.getPracticeChips();
         if(chips < role.getScene().getBudget()) {
             role.setPracticeChips(chips + 1);
-            BoardLayersListener.displayMessage("You rehearsed and now have" + role.getPracticeChips() + " practice chips!");
+            BoardLayersListener.displayMessage("You rehearsed and now have " + role.getPracticeChips() + " practice chips!");
             return false;
         }
         view.displayMessage("You already have the max amount of practice chips, please act");
@@ -569,12 +638,14 @@ public class Moderator implements GameActionListener {
 
         if(!playerOnCard) {
             view.displayMessage("there is no one on a on card role, therefore no bonus payment");
+            BoardLayersListener.displayMessage("there is no one on a on card role, therefore no bonus payment");
         }
 
         // on card bonuses
         if(playerOnCard) {
             int[] rolls = new int[scene.getBudget()];
             view.displayMessage("active player gets to roll " + scene.getBudget() + " dice");
+            BoardLayersListener.displayMessage("active player gets to roll " + scene.getBudget() + " dice");
 
             Dice dice = new Dice();
             
@@ -582,6 +653,7 @@ public class Moderator implements GameActionListener {
             for(int i = 0; i < scene.getBudget(); i++) {
                 int value = dice.roll();
                 view.displayMessage("you rolled a " + value);
+                BoardLayersListener.displayMessage("you rolled a " + value);
                 rolls[i] = value;
             }
             Arrays.sort(rolls); 
@@ -611,9 +683,24 @@ public class Moderator implements GameActionListener {
             }
         }
 
+        // get the room so the gui can flip the scene card
+        int room = 0;
+        for(int i = 0; i < board.getRooms().length; i++) {
+            if(activePlayer.getLocation().getName().equals(board.getRooms()[i].getName())) {
+                room = i;
+            }
+        }
+
         // loop through the scene and remove players role
         for(int i = 0; i < scene.getRoles().length; i++) {
             if(scene.getRoles()[i].getActor() != null) {
+                // move off of role in gui
+                int index = scene.getRoles()[i].getActor().getPlayerIndex();
+                int rank = scene.getRoles()[i].getActor().getRank();
+                int x = activePlayer.getLocation().getX();
+                int y = activePlayer.getLocation().getY();
+                BoardLayersListener.removePlayerFromScene(index, rank - 1, x, y);
+
                 scene.getRoles()[i].getActor().setRole(null);
             }
         }
@@ -622,6 +709,14 @@ public class Moderator implements GameActionListener {
         Set offCard = (Set) activePlayer.getLocation();
         for(int i = 0; i < offCard.getRoles().length; i++) {
             if(offCard.getRoles()[i].getActor() != null) {
+                
+                // move off of role in gui
+                int index = offCard.getRoles()[i].getActor().getPlayerIndex();
+                int rank = offCard.getRoles()[i].getActor().getRank();
+                int x = activePlayer.getLocation().getX();
+                int y = activePlayer.getLocation().getY();
+                BoardLayersListener.removePlayerFromScene(index, rank - 1, x, y);
+
                 offCard.getRoles()[i].getActor().setRole(null);
                 offCard.getRoles()[i].setActor(null);
             }
@@ -641,6 +736,9 @@ public class Moderator implements GameActionListener {
             // if all scenes wrapped besides one, then start a new day
             sceneList = startDay(sceneList, playerList);
         }
+
+        // remove the players from roles
+        BoardLayersListener.removeSceneCard(room);
     }
 
     // Method to reverse an array in-place
