@@ -96,7 +96,7 @@ public class BoardLayersListener extends JFrame {
       // adjust the grid layout based on num of buttons
       buttonPanel.setLayout(new GridLayout(4, 2));
 
-      boardMouseListener mouseListener = new boardMouseListener();
+      mouseListener = new boardMouseListener();
       mouseListener.addGameActionListener(gameActionListener);
 
       // create player buttons
@@ -598,7 +598,7 @@ public class BoardLayersListener extends JFrame {
 
    // move a player to the given on card role set to the given set
    public static void movePlayerOnCardRole(int setX, int setY, int roleX, int roleY, int roleW, int roleH) {
-
+      
       // move the current player label with the right rank to the given role
       playerLabel.setBounds(setX + roleX, setY + roleY, roleW, roleH);
    }
