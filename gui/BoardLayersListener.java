@@ -15,7 +15,7 @@ import java.util.List;
 
 // View: handles UI
 // JFrame: main window
-public class BoardLayersListener extends JFrame {
+public class BoardLayersListener extends JFrame implements Observer{
    // listeners
    private boardMouseListener mouseListener;
    private GameActionListener gameActionListener;
@@ -33,6 +33,15 @@ public class BoardLayersListener extends JFrame {
    private static JLabel[] activeCardLabels;
    private static JLabel[][] activeTakeLabels = new JLabel[10][];  // an array per set
    private static JLabel[][] playerLabels = new JLabel[8][6];  // array of player dice arrays
+
+   // playerData JLabels
+   private static JLabel nameLabel;
+   private static JLabel locationLabel;
+   private static JLabel rankLabel;
+   private static JLabel dollarLabel;
+   private static JLabel creditLabel;
+   private static JLabel roleLabel;
+   private static JLabel dayLabel;
 
    // JPanels
    // containers that hold groups of components
@@ -146,9 +155,7 @@ public class BoardLayersListener extends JFrame {
 
       // create the player data panel
       playerDataPanel = new JPanel();
-      playerDataPanel.setLayout(new BorderLayout());
-      playerDataLabel = new JLabel("Player Data");
-      playerDataPanel.add(playerDataLabel, BorderLayout.CENTER);
+      displayPlayer();  // init the panel labels
 
       // create a vertical split pane for console + buttons
       consoleSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, consolePanel, buttonPanel);
@@ -283,7 +290,7 @@ public class BoardLayersListener extends JFrame {
       return;
    }
 
-   // TAKES - might hav eto change to maintain MVC
+   // TAKES
 
    // set up the takes for the set associated w takes (shot counter)
    public static JLabel[] setTakes(Take[] takes) {
@@ -524,9 +531,7 @@ public class BoardLayersListener extends JFrame {
 
    // increase a given players rank (and dice display)
    // player is 1-8 (do not consider 0 indexing for param)
-   // TODO
    public static void increasePlayersRank(int playerNum, int requestedRank) {
-      // TODO update players dice display wherever it is
       // for the given player (to update their dice on the screen) (always in same spot in casting office when upgrading):
       // increase playerDieLevel[playerNum - 1]++;
       // in the playerLabels[playerNum-1][playerDieLevel[playerNum - 1] (the players new Jframe for their upgraded rank)
@@ -536,12 +541,6 @@ public class BoardLayersListener extends JFrame {
       playerLabels[playerNum][requestedRank].setVisible(true);
       playerLabels[playerNum][requestedRank].setBounds(playerLabel.getBounds());
       playerLabel = playerLabels[playerNum][requestedRank];
-   }
-
-   // move a player to the given room, specifiying how many players are already here
-   // TODO
-   public static void movePlayerRoom(int room, int playerNum) {
-      // TODO figure out what area cord apply for each room
    }
 
    // move a player to a given role
@@ -558,11 +557,6 @@ public class BoardLayersListener extends JFrame {
       // move the current player label with the right rank to the given role
       playerLabel.setBounds(setX + roleX, setY + roleY, roleW, roleH);
    }
-
-   // maybe make some wrappers that make it easier to move to specific rooms
-   // + one to move all players to the trailers (keeping in mind not all 8 will always be playing)
-  
-   // END OF CONSTRUCTOR (and helpers)
 
    // This class implements Mouse Events
    class boardMouseListener implements MouseListener{
@@ -646,6 +640,43 @@ public class BoardLayersListener extends JFrame {
          return 2;  // default option
       }
       return selection;
+   }
+
+   // PLAYER DATA TAB FUNCTIONS
+   // update the current players data
+   @Override
+   public static void update(String name, Room location, int rank, int dollars, int credits, Role role) {
+      // TODO
+      // need to check it it's the current player that's being displayed
+   }
+
+   // setup the playerData Panel
+   public static void displayPlayer() {
+      // set up the layout
+      playerDataPanel.setLayout(new GridLayout(7, 1));
+
+      // init the labels
+      nameLabel = new JLabel();
+      locationLabel = new JLabel();
+      rankLabel = new JLabel();
+      dollarLabel = new JLabel();
+      creditLabel = new JLabel();
+      roleLabel = new JLabel();
+      dayLabel = new JLabel();
+
+      // add all playerData labels to the playerDataPanel
+      playerDataPanel.add(nameLabel);
+      playerDataPanel.add(locationLabel);
+      playerDataPanel.add(rankLabel);
+      playerDataPanel.add(dollarLabel);
+      playerDataPanel.add(creditLabel);
+      playerDataPanel.add(roleLabel);
+      playerDataPanel.add(dayLabel);
+   }
+
+   // display the current player in the playerData panel
+   public static void displayPlayer(int currentPlayer, String location, int rank, int dollars, int credits, String role) {
+
    }
 
    // FOR TESTING, acts as this classes main method

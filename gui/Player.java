@@ -1,6 +1,9 @@
 package gui;
 
-public class Player {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Player implements Subject{
     private String name;
     private Room location;
     private int rank;
@@ -8,6 +11,8 @@ public class Player {
     private int credits;
     private Role role;
     private boolean hasMoved;
+    // subject implementation
+    private List<Observer> observers;
 
     // added
     private int playerIndex;
@@ -94,4 +99,21 @@ public class Player {
         return this.playerIndex;
     }
 
+    // subject interface methods
+    @Override
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(this.location, this.rank, this.dollars, this.credits, this.role);
+        }
+    }
 }

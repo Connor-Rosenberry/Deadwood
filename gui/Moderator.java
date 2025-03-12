@@ -97,6 +97,7 @@ public class Moderator implements GameActionListener {
             BoardLayersListener.displayMessage("It is player " + playerList[currentPlayer].getName() + "'s turn!");
 
             boolean turnActive = true;
+            // TODO signal to GUI it is players turn
 
             // Player's turn loop
             while (turnActive && gameRunning) {
@@ -119,6 +120,8 @@ public class Moderator implements GameActionListener {
             // Move to the next player after their turn ends
             currentPlayer = (currentPlayer + 1) % playerList.length;
             playerList[currentPlayer].setHasMoved(false);
+
+            // TODO signal to GUI players turn is over
         }
         endGame();
     }
