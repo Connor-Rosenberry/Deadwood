@@ -35,7 +35,9 @@ public class BoardLayersListener extends JFrame implements Observer{
    private static JLabel[][] playerLabels = new JLabel[8][6];  // array of player dice arrays
 
    // playerData JLabels
+   private static int currentPlayer;
    private static JLabel nameLabel;
+   private static JLabel numberLabel;
    private static JLabel locationLabel;
    private static JLabel rankLabel;
    private static JLabel dollarLabel;
@@ -155,7 +157,7 @@ public class BoardLayersListener extends JFrame implements Observer{
 
       // create the player data panel
       playerDataPanel = new JPanel();
-      displayPlayer();  // init the panel labels
+      setPlayerData();  // init the panel labels
 
       // create a vertical split pane for console + buttons
       consoleSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, consolePanel, buttonPanel);
@@ -645,17 +647,25 @@ public class BoardLayersListener extends JFrame implements Observer{
    // PLAYER DATA TAB FUNCTIONS
    // update the current players data
    @Override
-   public static void update(String name, Room location, int rank, int dollars, int credits, Role role) {
-      // TODO
-      // need to check it it's the current player that's being displayed
+   public void update(int playerNum, String name, String location, int rank, int dollars, int credits, String role) {
+      if (playerNum == currentPlayer) {
+         // update the display, as current players info is changing
+         nameLabel.setText("Name: " + name);
+         locationLabel.setText("Location: " + location);
+         rankLabel.setText("Rank: " + rank);
+         dollarLabel.setText("Dollars: " + dollars);
+         creditLabel.setText("Credits: " + credits);
+         roleLabel.setText("Role: " + role);
+      }
    }
 
    // setup the playerData Panel
-   public static void displayPlayer() {
+   public static void setPlayerData() {
       // set up the layout
       playerDataPanel.setLayout(new GridLayout(7, 1));
 
       // init the labels
+      numberLabel = new JLabel();
       nameLabel = new JLabel();
       locationLabel = new JLabel();
       rankLabel = new JLabel();
@@ -665,6 +675,7 @@ public class BoardLayersListener extends JFrame implements Observer{
       dayLabel = new JLabel();
 
       // add all playerData labels to the playerDataPanel
+      playerDataPanel.add(numberLabel);
       playerDataPanel.add(nameLabel);
       playerDataPanel.add(locationLabel);
       playerDataPanel.add(rankLabel);
@@ -675,8 +686,28 @@ public class BoardLayersListener extends JFrame implements Observer{
    }
 
    // display the current player in the playerData panel
-   public static void displayPlayer(int currentPlayer, String location, int rank, int dollars, int credits, String role) {
+   public void displayPlayerData(String name, int playerNum, String location, int rank, int dollars, int credits, String role, int day) {
+      currentPlayer = playerNum;  // set the current player's whos info is being displayed
+      numberLabel.setText("Player number " + playerNum);
+      nameLabel.setText("Name: " + name);
+      locationLabel.setText("Location: " + location);
+      rankLabel.setText("Rank: " + rank);
+      dollarLabel.setText("Dollars: " + dollars);
+      creditLabel.setText("Credits: " + credits);
+      roleLabel.setText("Role: " + role);
+      dayLabel.setText("Day: " + day);
+   }
 
+   // clear all player data in the playerData panel
+   public void clearPlayerData() {
+      numberLabel.setText("");
+      nameLabel.setText("");
+      locationLabel.setText("");
+      rankLabel.setText("");
+      dollarLabel.setText("");
+      creditLabel.setText("");
+      roleLabel.setText("");
+      dayLabel.setText("");
    }
 
    // FOR TESTING, acts as this classes main method

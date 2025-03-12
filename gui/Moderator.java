@@ -57,6 +57,9 @@ public class Moderator implements GameActionListener {
 
             Player player = new Player(input, i);
             playerList[i] = player;
+            // ADDED -- attach the obseserver to use in the view's playerData panel
+            playerList[i].attach(boardView);
+
             if(numPlayers == 5) {
                 player.setCredits(2);
             }
@@ -97,7 +100,19 @@ public class Moderator implements GameActionListener {
             BoardLayersListener.displayMessage("It is player " + playerList[currentPlayer].getName() + "'s turn!");
 
             boolean turnActive = true;
-            // TODO signal to GUI it is players turn
+            
+            // ADDED -- display active players data for playerData panel in GUI
+            if (playerList[currentPlayer].getRole() != null) {
+                // player has a role to parse in
+                boardView.displayPlayerData(playerList[currentPlayer].getName(), currentPlayer + 1, playerList[currentPlayer].getLocation().getName(),
+                    playerList[currentPlayer].getRank(), playerList[currentPlayer].getDollars(), playerList[currentPlayer].getCredits(),
+                    playerList[currentPlayer].getRole().getName(), dayCount);
+            } else {
+                // there is no role to parse in
+                boardView.displayPlayerData(playerList[currentPlayer].getName(), currentPlayer + 1, playerList[currentPlayer].getLocation().getName(),
+                    playerList[currentPlayer].getRank(), playerList[currentPlayer].getDollars(), playerList[currentPlayer].getCredits(),
+                    "no active role", dayCount);
+            }
 
             // Player's turn loop
             while (turnActive && gameRunning) {
@@ -121,7 +136,8 @@ public class Moderator implements GameActionListener {
             currentPlayer = (currentPlayer + 1) % playerList.length;
             playerList[currentPlayer].setHasMoved(false);
 
-            // TODO signal to GUI players turn is over
+            // clear current players data from GUI
+            boardView.clearPlayerData();
         }
         endGame();
     }
@@ -187,6 +203,8 @@ public class Moderator implements GameActionListener {
             Player player = playerList[i];
             player.setLocation(board.getRooms()[11]);
             player.setRole(null);
+
+            // NO CURRENT PLAYER -- do not need to notify observer
 
             // for formatting
             if(i < 4) {
@@ -321,6 +339,18 @@ public class Moderator implements GameActionListener {
             }
         }
         BoardLayersListener.setPlayerLocation(currentPlayer.getLocation().getX(), currentPlayer.getLocation().getY());
+
+        // ADDED -- notify GUI of update
+        if (currentPlayer.getRole() != null) {
+            // active role to display
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+                    currentPlayer.getDollars(), currentPlayer.getCredits(), currentPlayer.getRole().getName());
+        } else {
+            // no active role to display
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+                    currentPlayer.getDollars(), currentPlayer.getCredits(), "no active role");
+        }
+
         return true;
     }
 
@@ -388,6 +418,17 @@ public class Moderator implements GameActionListener {
         }
         BoardLayersListener.displayMessage("Player is now working " + role.getName());
 
+        // ADDED -- notify GUI of update
+        if (currentPlayer.getRole() != null) {
+            // active role to display
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+                    currentPlayer.getDollars(), currentPlayer.getCredits(), currentPlayer.getRole().getName());
+        } else {
+            // no active role to display
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+                    currentPlayer.getDollars(), currentPlayer.getCredits(), "no active role");
+        }
+
         // if the player has already moved then their turn is over
         if(currentPlayer.getHasMoved() == true) {
             BoardLayersListener.displayMessage("Player has moved, so their turn is over");
@@ -437,6 +478,18 @@ public class Moderator implements GameActionListener {
                 player.setCredits(newCreditAmount);
             }
             BoardLayersListener.displayMessage("Player is now rank " + player.getRank());
+
+            // ADDED -- notify GUI of update
+            if (player.getRole() != null) {
+                // active role to display
+                boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                        player.getDollars(), player.getCredits(), player.getRole().getName());
+            } else {
+                // no active role to display
+                boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                        player.getDollars(), player.getCredits(), "no active role");
+            }
+
             return true;
         } catch (NumberFormatException e) {
             return true;
@@ -473,6 +526,18 @@ public class Moderator implements GameActionListener {
         if(shots-1 == 0) {
             sceneWrap(scene, player);
         }
+
+        // ADDED -- notify GUI of update
+        if (player.getRole() != null) {
+            // active role to display
+            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                    player.getDollars(), player.getCredits(), player.getRole().getName());
+        } else {
+            // no active role to display
+            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                    player.getDollars(), player.getCredits(), "no active role");
+        }
+
         
         // otherwise pay player based on on vs off card roles
         if(role.getOnCard() == true) {
@@ -490,6 +555,18 @@ public class Moderator implements GameActionListener {
             player.addDollars(1);
             BoardLayersListener.displayMessage("Player " + player.getName() + " received 1 credits and 1 dollar they now have " + player.getCredits() + " credits and " + player.getDollars() + " dollars!");
         }
+
+        // ADDED -- notify GUI of update
+        if (player.getRole() != null) {
+            // active role to display
+            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                    player.getDollars(), player.getCredits(), player.getRole().getName());
+        } else {
+            // no active role to display
+            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                    player.getDollars(), player.getCredits(), "no active role");
+        }
+
         return false;
     }
 
@@ -616,6 +693,17 @@ public class Moderator implements GameActionListener {
         }
         // remove the players from roles
         BoardLayersListener.removeSceneCard(room);
+
+        // ADDED -- notify GUI of update
+        if (activePlayer.getRole() != null) {
+            // active role to display
+            boardView.update(activePlayer.getPlayerIndex() + 1, activePlayer.getName(), activePlayer.getLocation().getName(), activePlayer.getRank(),
+                    activePlayer.getDollars(), activePlayer.getCredits(), activePlayer.getRole().getName());
+        } else {
+            // no active role to display
+            boardView.update(activePlayer.getPlayerIndex() + 1, activePlayer.getName(), activePlayer.getLocation().getName(), activePlayer.getRank(),
+                    activePlayer.getDollars(), activePlayer.getCredits(), "no active role");
+        }
     }
 
     // Method to reverse an array in-place

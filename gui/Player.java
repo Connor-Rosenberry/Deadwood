@@ -24,6 +24,7 @@ public class Player implements Subject{
         this.credits = 0;
         this.hasMoved = false;
         this.playerIndex = index;
+        this.observers = new ArrayList<>();
     }
 
     public String getName() {
@@ -113,7 +114,12 @@ public class Player implements Subject{
     @Override
     public void notifyObservers() {
         for (Observer o : observers) {
-            o.update(this.location, this.rank, this.dollars, this.credits, this.role);
-        }
+            if (role != null) {
+                o.update(this.name , this.location.getName(), this.rank, this.dollars, this.credits, this.role.getName());
+            } else {
+                // no role taken
+                o.update(this.name , this.location.getName(), this.rank, this.dollars, this.credits, "no active role");
+            }
+        }    
     }
 }
