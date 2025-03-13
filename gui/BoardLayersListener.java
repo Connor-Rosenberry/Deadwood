@@ -36,7 +36,6 @@ public class BoardLayersListener extends JFrame implements Observer{
 
    // playerData JLabels
    private static int currentPlayer;
-   private static JLabel nameLabel;
    private static JLabel numberLabel;
    private static JLabel locationLabel;
    private static JLabel rankLabel;
@@ -647,10 +646,9 @@ public class BoardLayersListener extends JFrame implements Observer{
    // PLAYER DATA TAB FUNCTIONS
    // update the current players data
    @Override
-   public void update(int playerNum, String name, String location, int rank, int dollars, int credits, String role) {
+   public void update(int playerNum, String location, int rank, int dollars, int credits, String role) {
       if (playerNum == currentPlayer) {
          // update the display, as current players info is changing
-         nameLabel.setText("Name: " + name);
          locationLabel.setText("Location: " + location);
          rankLabel.setText("Rank: " + rank);
          dollarLabel.setText("Dollars: " + dollars);
@@ -686,10 +684,9 @@ public class BoardLayersListener extends JFrame implements Observer{
    }
 
    // display the current player in the playerData panel
-   public void displayPlayerData(String name, int playerNum, String location, int rank, int dollars, int credits, String role, int day) {
+   public void displayPlayerData(int playerNum, String location, int rank, int dollars, int credits, String role, int day) {
       currentPlayer = playerNum;  // set the current player's whos info is being displayed
       numberLabel.setText("Player number " + playerNum);
-      nameLabel.setText("Name: " + name);
       locationLabel.setText("Location: " + location);
       rankLabel.setText("Rank: " + rank);
       dollarLabel.setText("Dollars: " + dollars);

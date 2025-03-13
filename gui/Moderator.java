@@ -343,11 +343,11 @@ public class Moderator implements GameActionListener {
         // ADDED -- notify GUI of update
         if (currentPlayer.getRole() != null) {
             // active role to display
-            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getLocation().getName(), currentPlayer.getRank(),
                     currentPlayer.getDollars(), currentPlayer.getCredits(), currentPlayer.getRole().getName());
         } else {
             // no active role to display
-            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getLocation().getName(), currentPlayer.getRank(),
                     currentPlayer.getDollars(), currentPlayer.getCredits(), "no active role");
         }
 
@@ -421,11 +421,11 @@ public class Moderator implements GameActionListener {
         // ADDED -- notify GUI of update
         if (currentPlayer.getRole() != null) {
             // active role to display
-            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getLocation().getName(), currentPlayer.getRank(),
                     currentPlayer.getDollars(), currentPlayer.getCredits(), currentPlayer.getRole().getName());
         } else {
             // no active role to display
-            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getName(), currentPlayer.getLocation().getName(), currentPlayer.getRank(),
+            boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getLocation().getName(), currentPlayer.getRank(),
                     currentPlayer.getDollars(), currentPlayer.getCredits(), "no active role");
         }
 
@@ -482,11 +482,11 @@ public class Moderator implements GameActionListener {
             // ADDED -- notify GUI of update
             if (player.getRole() != null) {
                 // active role to display
-                boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                         player.getDollars(), player.getCredits(), player.getRole().getName());
             } else {
                 // no active role to display
-                boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+                boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                         player.getDollars(), player.getCredits(), "no active role");
             }
 
@@ -530,11 +530,11 @@ public class Moderator implements GameActionListener {
         // ADDED -- notify GUI of update
         if (player.getRole() != null) {
             // active role to display
-            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+            boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                     player.getDollars(), player.getCredits(), player.getRole().getName());
         } else {
             // no active role to display
-            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+            boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                     player.getDollars(), player.getCredits(), "no active role");
         }
 
@@ -559,11 +559,11 @@ public class Moderator implements GameActionListener {
         // ADDED -- notify GUI of update
         if (player.getRole() != null) {
             // active role to display
-            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+            boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                     player.getDollars(), player.getCredits(), player.getRole().getName());
         } else {
             // no active role to display
-            boardView.update(player.getPlayerIndex() + 1, player.getName(), player.getLocation().getName(), player.getRank(),
+            boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                     player.getDollars(), player.getCredits(), "no active role");
         }
 
@@ -697,11 +697,11 @@ public class Moderator implements GameActionListener {
         // ADDED -- notify GUI of update
         if (activePlayer.getRole() != null) {
             // active role to display
-            boardView.update(activePlayer.getPlayerIndex() + 1, activePlayer.getName(), activePlayer.getLocation().getName(), activePlayer.getRank(),
+            boardView.update(activePlayer.getPlayerIndex() + 1, activePlayer.getLocation().getName(), activePlayer.getRank(),
                     activePlayer.getDollars(), activePlayer.getCredits(), activePlayer.getRole().getName());
         } else {
             // no active role to display
-            boardView.update(activePlayer.getPlayerIndex() + 1, activePlayer.getName(), activePlayer.getLocation().getName(), activePlayer.getRank(),
+            boardView.update(activePlayer.getPlayerIndex() + 1, activePlayer.getLocation().getName(), activePlayer.getRank(),
                     activePlayer.getDollars(), activePlayer.getCredits(), "no active role");
         }
     }
