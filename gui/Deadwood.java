@@ -9,7 +9,8 @@ public class Deadwood {
         BoardCreator fill = new BoardCreator();
         boardStats = fill.parseBoard();
 
-        Moderator moderator = new Moderator(null, boardStats);
+        Moderator moderator = Moderator.getInstance();
+        moderator.init(null, boardStats);
 
         BoardLayersListener boardView = new BoardLayersListener(moderator);
         moderator.setBoardView(boardView);

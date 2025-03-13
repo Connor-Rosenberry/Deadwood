@@ -115,10 +115,10 @@ public class Player implements Subject{
     public void notifyObservers() {
         for (Observer o : observers) {
             if (role != null) {
-                o.update(this.name , this.location.getName(), this.rank, this.dollars, this.credits, this.role.getName());
+                o.update(this.playerIndex , this.location.getName(), this.rank, this.dollars, this.credits, this.role.getName());
             } else {
                 // no role taken
-                o.update(this.name , this.location.getName(), this.rank, this.dollars, this.credits, "no active role");
+                o.update(this.playerIndex , this.location.getName(), this.rank, this.dollars, this.credits, "no active role");
             }
         }    
     }

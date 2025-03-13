@@ -1,14 +1,14 @@
 package gui;
 
 public class Board {
-    //  VARIABLES
     private Room[] rooms;
+    private static Board instance;
 
-    // CONSTRUCTORS
-    public Board() {}
-
-    public Board(Room[] rooms) {
-        this.rooms = rooms;
+    public static Board getInstance() {
+        if (instance == null) {
+            instance = new Board();
+        }
+        return instance;
     }
 
     // GETS/SETS

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Moderator implements GameActionListener {
+    private static Moderator instance;
+
     private Board board;
     private BoardLayersListener boardView;
     private boolean gameRunning;
@@ -17,10 +19,24 @@ public class Moderator implements GameActionListener {
 
     private String currentCommand = null;
 
-    public Moderator(BoardLayersListener boardView, Board board) {
-        this.boardView = boardView;
-        this.board = board;
+    private Moderator() {
         this.gameRunning = true;
+    }
+
+    public static Moderator getInstance() {
+        if (instance == null) {
+            instance = new Moderator();
+        }
+        return instance;
+    }
+
+    public void init(BoardLayersListener boardView, Board board) {
+        if (this.boardView == null && this.board == null) { // Prevent multiple initializations
+            this.boardView = boardView;
+            this.board = board;
+        } else {
+            throw new IllegalStateException("Moderator is already initialized.");
+        }
     }
 
     @Override
@@ -272,6 +288,10 @@ public class Moderator implements GameActionListener {
         }
         else if (command.get(0).equals("act")) {
             // attempt to let the player act
+            if(playerList[currentPlayer].getRole() == null) {
+                BoardLayersListener.displayMessage("Must \"work\" a role before acting");
+                return true;
+            }
             return act(playerList[currentPlayer]);
 
         } 
@@ -279,7 +299,7 @@ public class Moderator implements GameActionListener {
             // attempt to let the player rehearse
             BoardLayersListener.displayMessage("rehearse command selected.");
             if(playerList[currentPlayer].getRole() == null) {
-                BoardLayersListener.displayMessage("Must \\\"work\\\" a role before rehearsing");
+                BoardLayersListener.displayMessage("Must \"work\" a role before rehearsing");
                 return true;
             }
             return rehearse(playerList[currentPlayer]);
