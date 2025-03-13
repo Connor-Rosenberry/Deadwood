@@ -37,6 +37,7 @@ public class BoardLayersListener extends JFrame implements Observer{
    // playerData JLabels
    private static int currentPlayer;
    private static JLabel numberLabel;
+   private static JLabel diceLabel;
    private static JLabel locationLabel;
    private static JLabel rankLabel;
    private static JLabel dollarLabel;
@@ -649,22 +650,33 @@ public class BoardLayersListener extends JFrame implements Observer{
    public void update(int playerNum, String location, int rank, int dollars, int credits, String role) {
       if (playerNum == currentPlayer) {
          // update the display, as current players info is changing
-         locationLabel.setText("Location: " + location);
-         rankLabel.setText("Rank: " + rank);
-         dollarLabel.setText("Dollars: " + dollars);
-         creditLabel.setText("Credits: " + credits);
-         roleLabel.setText("Role: " + role);
+         // dice displaying
+         Icon die = playerLabels[playerNum - 1][rank - 1].getIcon();
+         diceLabel.setIcon(die);
+         diceLabel.setVisible(true);
+
+         locationLabel.setText("<html><b>Location: </b>" + location + "</html>");
+         rankLabel.setText("<html><b>Rank: </b>" + rank + "</html>");
+         dollarLabel.setText("<html><b>Dollars: </b>" + dollars + "</html>");
+         creditLabel.setText("<html><b>Credits: </b>" + credits + "</html>");
+         roleLabel.setText("<html><b>Role: </b>" + role + "</html>");
       }
    }
 
    // setup the playerData Panel
    public static void setPlayerData() {
       // set up the layout
-      playerDataPanel.setLayout(new GridLayout(7, 1));
+      // playerDataPanel.setLayout(new GridLayout(7, 1));
+      playerDataPanel.setLayout(new GridBagLayout()); // Use GridBagLayout for centering
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(5, 5, 5, 5); // Add padding
+      gbc.gridx = 0;
+      gbc.gridy = GridBagConstraints.RELATIVE;
+      gbc.anchor = GridBagConstraints.CENTER; // Center the components
 
       // init the labels
       numberLabel = new JLabel();
-      nameLabel = new JLabel();
+      diceLabel = new JLabel();
       locationLabel = new JLabel();
       rankLabel = new JLabel();
       dollarLabel = new JLabel();
@@ -673,32 +685,49 @@ public class BoardLayersListener extends JFrame implements Observer{
       dayLabel = new JLabel();
 
       // add all playerData labels to the playerDataPanel
-      playerDataPanel.add(numberLabel);
-      playerDataPanel.add(nameLabel);
-      playerDataPanel.add(locationLabel);
-      playerDataPanel.add(rankLabel);
-      playerDataPanel.add(dollarLabel);
-      playerDataPanel.add(creditLabel);
-      playerDataPanel.add(roleLabel);
-      playerDataPanel.add(dayLabel);
+      playerDataPanel.add(numberLabel, gbc);
+      playerDataPanel.add(diceLabel, gbc);
+      playerDataPanel.add(locationLabel, gbc);
+      playerDataPanel.add(rankLabel, gbc);
+      playerDataPanel.add(dollarLabel, gbc);
+      playerDataPanel.add(creditLabel, gbc);
+      playerDataPanel.add(roleLabel, gbc);
+      playerDataPanel.add(dayLabel, gbc);
    }
 
    // display the current player in the playerData panel
    public void displayPlayerData(int playerNum, String location, int rank, int dollars, int credits, String role, int day) {
       currentPlayer = playerNum;  // set the current player's whos info is being displayed
-      numberLabel.setText("Player number " + playerNum);
-      locationLabel.setText("Location: " + location);
-      rankLabel.setText("Rank: " + rank);
-      dollarLabel.setText("Dollars: " + dollars);
-      creditLabel.setText("Credits: " + credits);
-      roleLabel.setText("Role: " + role);
-      dayLabel.setText("Day: " + day);
+      // Set the font for regularLabel to ensure it's not bold
+      
+      // set number Label to be bold
+      numberLabel.setText("<html><font color='blue'><b>Player " + playerNum + "</b></font></html>");
+      // diceLabel set up and display
+      Icon die = playerLabels[playerNum - 1][rank - 1].getIcon();
+      diceLabel.setIcon(die);
+      diceLabel.setVisible(true);
+      
+      locationLabel.setText("<html><b>Location: </b>" + location + "</html>");
+      rankLabel.setText("<html><b>Rank: </b>" + rank + "</html>");
+      dollarLabel.setText("<html><b>Dollars: </b>" + dollars + "</html>");
+      creditLabel.setText("<html><b>Credits: </b>" + credits + "</html>");
+      roleLabel.setText("<html><b>Role: </b>" + role + "</html>");
+      dayLabel.setText("<html><b>Day: </b>" + day + "</html>");
+
+      // make font non-bolded
+      Font regularFont = new Font(locationLabel.getFont().getName(), Font.PLAIN, locationLabel.getFont().getSize());
+      locationLabel.setFont(regularFont);
+      rankLabel.setFont(regularFont);
+      dollarLabel.setFont(regularFont);
+      creditLabel.setFont(regularFont);
+      roleLabel.setFont(regularFont);
+      dayLabel.setFont(regularFont);
    }
 
    // clear all player data in the playerData panel
    public void clearPlayerData() {
       numberLabel.setText("");
-      nameLabel.setText("");
+      diceLabel.setVisible(false);
       locationLabel.setText("");
       rankLabel.setText("");
       dollarLabel.setText("");

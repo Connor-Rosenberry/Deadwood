@@ -104,12 +104,12 @@ public class Moderator implements GameActionListener {
             // ADDED -- display active players data for playerData panel in GUI
             if (playerList[currentPlayer].getRole() != null) {
                 // player has a role to parse in
-                boardView.displayPlayerData(playerList[currentPlayer].getName(), currentPlayer + 1, playerList[currentPlayer].getLocation().getName(),
+                boardView.displayPlayerData(currentPlayer + 1, playerList[currentPlayer].getLocation().getName(),
                     playerList[currentPlayer].getRank(), playerList[currentPlayer].getDollars(), playerList[currentPlayer].getCredits(),
                     playerList[currentPlayer].getRole().getName(), dayCount);
             } else {
                 // there is no role to parse in
-                boardView.displayPlayerData(playerList[currentPlayer].getName(), currentPlayer + 1, playerList[currentPlayer].getLocation().getName(),
+                boardView.displayPlayerData(currentPlayer + 1, playerList[currentPlayer].getLocation().getName(),
                     playerList[currentPlayer].getRank(), playerList[currentPlayer].getDollars(), playerList[currentPlayer].getCredits(),
                     "no active role", dayCount);
             }
