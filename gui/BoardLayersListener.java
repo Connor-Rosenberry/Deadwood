@@ -3,19 +3,14 @@ package gui;
 import java.awt.*;
 import javax.swing.*;
 
-import gui.BoardLayersListener.boardMouseListener;
-
-import javax.imageio.ImageIO;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import java.util.List;
 
 // View: handles UI
 // JFrame: main window
 public class BoardLayersListener extends JFrame implements Observer{
+   // VARIABLES
    // listeners
    private boardMouseListener mouseListener;
    private GameActionListener gameActionListener;
@@ -29,7 +24,6 @@ public class BoardLayersListener extends JFrame implements Observer{
    // JLabels
    private static JLabel boardLabel;  // the gameboard
    private static JLabel playerLabel;
-   private static JLabel playerDataLabel;  // player data box
    private static JLabel[] activeCardLabels;
    private static JLabel[][] activeTakeLabels = new JLabel[10][];  // an array per set
    private static JLabel[][] playerLabels = new JLabel[8][6];  // array of player dice arrays
@@ -74,7 +68,7 @@ public class BoardLayersListener extends JFrame implements Observer{
    // Images
    private static ImageIcon board;  // board
 
-   // Constructor
+   // CONSTRUCTOR  -----------------------------------------------------
    public BoardLayersListener(GameActionListener listener) {
       // Set the title of the JFrame
       super("Deadwood");
@@ -177,8 +171,9 @@ public class BoardLayersListener extends JFrame implements Observer{
       setVisible(true);  // show the frame
    }
 
+   // BOARD METHODS  -----------------------------------------------------
+
    // constructor helper: setting up the board
-   // GUI ONLY
    private static void setUpBoard() {
       // create the board
       boardLabel = new JLabel();
@@ -198,14 +193,12 @@ public class BoardLayersListener extends JFrame implements Observer{
       boardPane.repaint();
    }
 
-   // SCENE CARDS
+
+   // SCENE CARDS  -----------------------------------------------------
 
    // constructor helper: will randomly select 10 cards to set on the scene
    // scenes should ONLY contain the 10 scene cards that shall be place
    // sets should ONLY contain the 10 sets the scenes should be in
-   // scenes and sets will be access with the same i
-   // returns the JLabels for the set up cards
-   // GUI ONLY
    public static void setSceneCards(Scene[] scenes, Set[] sets) {
       JLabel[] cardLabels = new JLabel[10];
       // for the 10 rooms that need scenes assign a scene
@@ -236,7 +229,7 @@ public class BoardLayersListener extends JFrame implements Observer{
       activeCardLabels = cardLabels;
    }
 
-   // clean scene cards from board (GUI ONLY)
+   // clean scene cards from board
    public static void removeSceneCards(JLabel[] cardLabels) {
       // for each set
       for (int i = 0; i < 10; i++) {
@@ -292,7 +285,11 @@ public class BoardLayersListener extends JFrame implements Observer{
       return;
    }
 
-   // TAKES
+   public static void flipCard(int card) {
+      activeCardLabels[card].setVisible(true);
+   }
+
+   // TAKES  -----------------------------------------------------
 
    // set up the takes for the set associated w takes (shot counter)
    public static JLabel[] setTakes(Take[] takes) {
@@ -367,7 +364,8 @@ public class BoardLayersListener extends JFrame implements Observer{
       return;
    }
 
-   // PLAYER DICE
+
+   // PLAYER DICE  -----------------------------------------------------
 
    // initalize all player dice JLabels
    // not setting bounds or visible, as we do not want to display them on the board yet
@@ -560,199 +558,6 @@ public class BoardLayersListener extends JFrame implements Observer{
       playerLabel.setBounds(setX + roleX, setY + roleY, roleW, roleH);
    }
 
-   // This class implements Mouse Events
-   class boardMouseListener implements MouseListener{
-      private List<GameActionListener> listeners = new ArrayList<>();
-
-      public void addGameActionListener(GameActionListener listener) {
-         listeners.add(listener);
-     }
- 
-     private void notifyListeners(String action) {
-         for (GameActionListener listener : listeners) {
-             listener.getInput(action);
-         }
-     }
-
-      // Code for the different button clicks
-      public void mouseClicked(MouseEvent e) { 
-         if (e.getSource() == bAct) {
-            playerLabel.setVisible(true);
-            displayMessage("Act selected");
-            notifyListeners("act");
-         }
-         else if (e.getSource() == bRehearse) {
-            displayMessage("Rehearse selected");
-            notifyListeners("rehearse");
-         }
-         else if (e.getSource() == bMove) {
-            displayMessage("Move selected");
-            notifyListeners("move");
-         }
-         else if (e.getSource() == bUpgrade) {
-            displayMessage("Upgrade selected");
-            notifyListeners("upgrade");
-         }
-         else if (e.getSource() == bTakeRole) {
-            displayMessage("Take Role selected");
-            notifyListeners("work");
-         }
-         else if (e.getSource() == bEndTurn) {
-            displayMessage("End turn selected");
-            notifyListeners("end turn");
-         }
-         else if (e.getSource() == bEndGame) {
-            displayMessage("End game selected");
-            notifyListeners("end game");
-         }
-      }
-
-      public void mousePressed(MouseEvent e) {
-      }
-
-      public void mouseReleased(MouseEvent e) {
-      }
-
-      public void mouseEntered(MouseEvent e) {
-      }
-
-      public void mouseExited(MouseEvent e) {
-      }
-   }
-
-   // print messaged to the console  // VIEW
-   public static void displayMessage(String message) {
-      consoleArea.append(message + "\n");
-   }
-
-   // popup for inputing number players  // INPUT
-   public static int playerSelection() {
-      Integer[] options = {2, 3, 4, 5, 6, 7, 8};
-      // prompt user
-      Integer selection = (Integer) JOptionPane.showInputDialog(
-         null,
-         "How many players?",
-         "Player selection",
-         JOptionPane.QUESTION_MESSAGE,
-         null,
-         options,
-         options[0]);
-      if (selection == null) {
-         // player didn't select
-         return 2;  // default option
-      }
-      return selection;
-   }
-
-   // PLAYER DATA TAB FUNCTIONS
-   // update the current players data
-   @Override
-   public void update(int playerNum, String location, int rank, int dollars, int credits, String role) {
-      if (playerNum == currentPlayer) {
-         // update the display, as current players info is changing
-         // dice displaying
-         Icon die = playerLabels[playerNum - 1][rank - 1].getIcon();
-         diceLabel.setIcon(die);
-         diceLabel.setVisible(true);
-
-         locationLabel.setText("<html><b>Location: </b>" + location + "</html>");
-         rankLabel.setText("<html><b>Rank: </b>" + rank + "</html>");
-         dollarLabel.setText("<html><b>Dollars: </b>" + dollars + "</html>");
-         creditLabel.setText("<html><b>Credits: </b>" + credits + "</html>");
-         roleLabel.setText("<html><b>Role: </b>" + role + "</html>");
-      }
-   }
-
-   // setup the playerData Panel
-   public static void setPlayerData() {
-      // set up the layout
-      // playerDataPanel.setLayout(new GridLayout(7, 1));
-      playerDataPanel.setLayout(new GridBagLayout()); // Use GridBagLayout for centering
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(5, 5, 5, 5); // Add padding
-      gbc.gridx = 0;
-      gbc.gridy = GridBagConstraints.RELATIVE;
-      gbc.anchor = GridBagConstraints.CENTER; // Center the components
-
-      // init the labels
-      numberLabel = new JLabel();
-      diceLabel = new JLabel();
-      locationLabel = new JLabel();
-      rankLabel = new JLabel();
-      dollarLabel = new JLabel();
-      creditLabel = new JLabel();
-      roleLabel = new JLabel();
-      dayLabel = new JLabel();
-
-      // add all playerData labels to the playerDataPanel
-      playerDataPanel.add(numberLabel, gbc);
-      playerDataPanel.add(diceLabel, gbc);
-      playerDataPanel.add(locationLabel, gbc);
-      playerDataPanel.add(rankLabel, gbc);
-      playerDataPanel.add(dollarLabel, gbc);
-      playerDataPanel.add(creditLabel, gbc);
-      playerDataPanel.add(roleLabel, gbc);
-      playerDataPanel.add(dayLabel, gbc);
-   }
-
-   // display the current player in the playerData panel
-   public void displayPlayerData(int playerNum, String location, int rank, int dollars, int credits, String role, int day) {
-      currentPlayer = playerNum;  // set the current player's whos info is being displayed
-      // Set the font for regularLabel to ensure it's not bold
-      
-      // set number Label to be bold
-      numberLabel.setText("<html><font color='blue'><b>Player " + playerNum + "</b></font></html>");
-      // diceLabel set up and display
-      Icon die = playerLabels[playerNum - 1][rank - 1].getIcon();
-      diceLabel.setIcon(die);
-      diceLabel.setVisible(true);
-      
-      locationLabel.setText("<html><b>Location: </b>" + location + "</html>");
-      rankLabel.setText("<html><b>Rank: </b>" + rank + "</html>");
-      dollarLabel.setText("<html><b>Dollars: </b>" + dollars + "</html>");
-      creditLabel.setText("<html><b>Credits: </b>" + credits + "</html>");
-      roleLabel.setText("<html><b>Role: </b>" + role + "</html>");
-      dayLabel.setText("<html><b>Day: </b>" + day + "</html>");
-
-      // make font non-bolded
-      Font regularFont = new Font(locationLabel.getFont().getName(), Font.PLAIN, locationLabel.getFont().getSize());
-      locationLabel.setFont(regularFont);
-      rankLabel.setFont(regularFont);
-      dollarLabel.setFont(regularFont);
-      creditLabel.setFont(regularFont);
-      roleLabel.setFont(regularFont);
-      dayLabel.setFont(regularFont);
-   }
-
-   // clear all player data in the playerData panel
-   public void clearPlayerData() {
-      numberLabel.setText("");
-      diceLabel.setVisible(false);
-      locationLabel.setText("");
-      rankLabel.setText("");
-      dollarLabel.setText("");
-      creditLabel.setText("");
-      roleLabel.setText("");
-      dayLabel.setText("");
-   }
-
-   // FOR TESTING, acts as this classes main method
-   public void makeGUI() {
-      // Take input from the user about number of players
-      numPlayers = playerSelection();
-
-      // set the players
-      adjustPlayerCount(numPlayers);
-
-
-      // // example of how to remove a single take
-      // removeTake(activeTakeLabels[0]);
-
-      // // example of how to remove takes and labels
-      // removeSceneCards(activeCardLabels, activeTakeLabels);
-   }
-
-
    // added by connor
    public int getNumPlayers() {
       return numPlayers;
@@ -834,8 +639,196 @@ public class BoardLayersListener extends JFrame implements Observer{
       playerLabels[player][rank].setBounds(x, y, 40, 40);
    }
 
-   public static void flipCard(int card) {
-      activeCardLabels[card].setVisible(true);
+   // PLAYER DATA TAB FUNCTIONS   -----------------------------------------------------
+
+   // update the current players data
+   @Override
+   public void update(int playerNum, String location, int rank, int dollars, int credits, String role) {
+      if (playerNum == currentPlayer) {
+         // update the display, as current players info is changing
+         // dice displaying
+         Icon die = playerLabels[playerNum - 1][rank - 1].getIcon();
+         diceLabel.setIcon(die);
+         diceLabel.setVisible(true);
+
+         locationLabel.setText("<html><b>Location: </b>" + location + "</html>");
+         rankLabel.setText("<html><b>Rank: </b>" + rank + "</html>");
+         dollarLabel.setText("<html><b>Dollars: </b>" + dollars + "</html>");
+         creditLabel.setText("<html><b>Credits: </b>" + credits + "</html>");
+         roleLabel.setText("<html><b>Role: </b>" + role + "</html>");
+      }
+   }
+
+   // constructor helper: setup the playerData Panel
+   public static void setPlayerData() {
+      // set up the layout
+      // playerDataPanel.setLayout(new GridLayout(7, 1));
+      playerDataPanel.setLayout(new GridBagLayout()); // Use GridBagLayout for centering
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(5, 5, 5, 5); // Add padding
+      gbc.gridx = 0;
+      gbc.gridy = GridBagConstraints.RELATIVE;
+      gbc.anchor = GridBagConstraints.CENTER; // Center the components
+
+      // init the labels
+      numberLabel = new JLabel();
+      diceLabel = new JLabel();
+      locationLabel = new JLabel();
+      rankLabel = new JLabel();
+      dollarLabel = new JLabel();
+      creditLabel = new JLabel();
+      roleLabel = new JLabel();
+      dayLabel = new JLabel();
+
+      // add all playerData labels to the playerDataPanel
+      playerDataPanel.add(numberLabel, gbc);
+      playerDataPanel.add(diceLabel, gbc);
+      playerDataPanel.add(locationLabel, gbc);
+      playerDataPanel.add(rankLabel, gbc);
+      playerDataPanel.add(dollarLabel, gbc);
+      playerDataPanel.add(creditLabel, gbc);
+      playerDataPanel.add(roleLabel, gbc);
+      playerDataPanel.add(dayLabel, gbc);
+   }
+
+   // display the current player in the playerData panel
+   public void displayPlayerData(int playerNum, String location, int rank, int dollars, int credits, String role, int day) {
+      currentPlayer = playerNum;  // set the current player's whos info is being displayed
+      // Set the font for regularLabel to ensure it's not bold
+      
+      // set number Label to be bold
+      numberLabel.setText("<html><font color='blue'><b>Player " + playerNum + "</b></font></html>");
+      // diceLabel set up and display
+      Icon die = playerLabels[playerNum - 1][rank - 1].getIcon();
+      diceLabel.setIcon(die);
+      diceLabel.setVisible(true);
+      
+      locationLabel.setText("<html><b>Location: </b>" + location + "</html>");
+      rankLabel.setText("<html><b>Rank: </b>" + rank + "</html>");
+      dollarLabel.setText("<html><b>Dollars: </b>" + dollars + "</html>");
+      creditLabel.setText("<html><b>Credits: </b>" + credits + "</html>");
+      roleLabel.setText("<html><b>Role: </b>" + role + "</html>");
+      dayLabel.setText("<html><b>Day: </b>" + day + "</html>");
+
+      // make font non-bolded
+      Font regularFont = new Font(locationLabel.getFont().getName(), Font.PLAIN, locationLabel.getFont().getSize());
+      locationLabel.setFont(regularFont);
+      rankLabel.setFont(regularFont);
+      dollarLabel.setFont(regularFont);
+      creditLabel.setFont(regularFont);
+      roleLabel.setFont(regularFont);
+      dayLabel.setFont(regularFont);
+   }
+
+   // clear all player data in the playerData panel
+   public void clearPlayerData() {
+      numberLabel.setText("");
+      diceLabel.setVisible(false);
+      locationLabel.setText("");
+      rankLabel.setText("");
+      dollarLabel.setText("");
+      creditLabel.setText("");
+      roleLabel.setText("");
+      dayLabel.setText("");
+   }
+
+
+   // MOUSE LISTENER  -----------------------------------------------------
+
+   // This class implements Mouse Events
+   class boardMouseListener implements MouseListener{
+      private List<GameActionListener> listeners = new ArrayList<>();
+
+      public void addGameActionListener(GameActionListener listener) {
+         listeners.add(listener);
+     }
+ 
+     private void notifyListeners(String action) {
+         for (GameActionListener listener : listeners) {
+             listener.getInput(action);
+         }
+     }
+
+      // Code for the different button clicks
+      public void mouseClicked(MouseEvent e) { 
+         if (e.getSource() == bAct) {
+            playerLabel.setVisible(true);
+            displayMessage("Act selected");
+            notifyListeners("act");
+         }
+         else if (e.getSource() == bRehearse) {
+            displayMessage("Rehearse selected");
+            notifyListeners("rehearse");
+         }
+         else if (e.getSource() == bMove) {
+            displayMessage("Move selected");
+            notifyListeners("move");
+         }
+         else if (e.getSource() == bUpgrade) {
+            displayMessage("Upgrade selected");
+            notifyListeners("upgrade");
+         }
+         else if (e.getSource() == bTakeRole) {
+            displayMessage("Take Role selected");
+            notifyListeners("work");
+         }
+         else if (e.getSource() == bEndTurn) {
+            displayMessage("End turn selected");
+            notifyListeners("end turn");
+         }
+         else if (e.getSource() == bEndGame) {
+            displayMessage("End game selected");
+            notifyListeners("end game");
+         }
+      }
+
+      public void mousePressed(MouseEvent e) {
+      }
+
+      public void mouseReleased(MouseEvent e) {
+      }
+
+      public void mouseEntered(MouseEvent e) {
+      }
+
+      public void mouseExited(MouseEvent e) {
+      }
+   }
+
+
+   // MISC METHODS  -----------------------------------------------------
+
+   // print messaged to the console
+   public static void displayMessage(String message) {
+      consoleArea.append(message + "\n");
+   }
+
+   // popup for inputing number players
+   public static int playerSelection() {
+      Integer[] options = {2, 3, 4, 5, 6, 7, 8};
+      // prompt user
+      Integer selection = (Integer) JOptionPane.showInputDialog(
+         null,
+         "How many players?",
+         "Player selection",
+         JOptionPane.QUESTION_MESSAGE,
+         null,
+         options,
+         options[0]);
+      if (selection == null) {
+         // player didn't select
+         return 2;  // default option
+      }
+      return selection;
+   }
+
+   // set up the gui with the right number of players
+   public void makeGUI() {
+      // Take input from the user about number of players
+      numPlayers = playerSelection();
+
+      // set the players
+      adjustPlayerCount(numPlayers);
    }
 
    public static void gameOver() {
