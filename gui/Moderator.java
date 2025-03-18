@@ -54,26 +54,17 @@ public class Moderator implements GameActionListener {
         boardView.makeGUI();
 
         // get the number of players and adds them to playerList
-        // view.displayMessage("How many players will be playing today? [2-8]");
         int numPlayers = boardView.getNumPlayers();
-
-        // not possible to be out of bounds
-
-        // if(numPlayers < 2 || numPlayers > 8) {
-        //     view.displayMessage("Must be between 2 and 8 players");
-        //     return;
-        // }
         playerList = new Player[numPlayers];
 
         // create "numPlayers" number of players
         for(int i = 0; i < numPlayers; i++) {
-            // view.displayMessage("what is player " + (i + 1) + "'s name?");
-            // String input = view.getUserInput();
             String input = "player " + (i + 1);
 
             Player player = new Player(input, i);
             playerList[i] = player;
-            // ADDED -- attach the obseserver to use in the view's playerData panel
+            
+            // attach the obseserver to use in the view's playerData panel
             playerList[i].attach(boardView);
 
             if(numPlayers == 5) {
@@ -85,11 +76,6 @@ public class Moderator implements GameActionListener {
             if(numPlayers >= 7) {
                 player.setRank(2);
             }
-
-
-
-
-            player.setDollars(100);
         }
 
         // create scene cards
@@ -110,9 +96,7 @@ public class Moderator implements GameActionListener {
         // Also note that a "player's" number is one number higher than their index in playerList
         // ex. player 1 = playerList[0];
         while (gameRunning) {
-            // view.displayMessage("It's " + playerList[currentPlayer].getName() + "'s turn.");
             boardView.setActivePlayer(currentPlayer, playerList[currentPlayer].getRank() - 1);
-            // System.out.println("active player is " + playerList[currentPlayer].getName());
             BoardLayersListener.displayMessage("It is player " + playerList[currentPlayer].getName() + "'s turn!");
 
             boolean turnActive = true;
@@ -144,7 +128,6 @@ public class Moderator implements GameActionListener {
                 }
 
                 BoardLayersListener.displayMessage("Enter a command");
-                // String input = view.getUserInput();
                 turnActive = handleInput(currentCommand, playerList, currentPlayer);
             }
 
@@ -220,17 +203,13 @@ public class Moderator implements GameActionListener {
             player.setLocation(board.getRooms()[11]);
             player.setRole(null);
 
-            // NO CURRENT PLAYER -- do not need to notify observer
-
             // for formatting
             if(i < 4) {
                 boardView.setPlayersVisible(i, player.getRank() - 1, x + (i * 40), y);
             } else {
                 boardView.setPlayersVisible(i, player.getRank() - 1, x + ((i - 4) * 40), y + 40);
             }
-            
         }
-        
         dayCount++;
         return remainingScenes;
     }
@@ -238,8 +217,6 @@ public class Moderator implements GameActionListener {
     // handle user input
     private boolean handleInput(String input, Player[] playerList, int currentPlayer) {
         List<String> command = new ArrayList<>(Arrays.asList(input.split(" ")));
-        int commandLength = command.size();
-    
         if (input.equals("move")) {
             if(playerList[currentPlayer].getHasMoved() == true) {
                 BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
@@ -249,20 +226,16 @@ public class Moderator implements GameActionListener {
                 BoardLayersListener.displayMessage("Player has already moved, please pick a different command");
                 return true;
             }
-    
             // get the requested destination and attempt to move there
             String destination = BoardLayersListener.roomSelection(playerList[currentPlayer].getLocation().getNeighbors());
             move(playerList[currentPlayer], destination);
-
             return true;
-
         }
         else if (command.get(0).equals("work")) {
             if(playerList[currentPlayer].getRole() != null) {
                 BoardLayersListener.displayMessage("You are already working, you can act or rehearse");
                 return true;
             }
-            
             // player must be at a location with roles
             if(playerList[currentPlayer].getLocation().getName().equals("office") || playerList[currentPlayer].getLocation().getName().equals("trailer")) {
                 BoardLayersListener.displayMessage("Must be at a location with roles to work");
@@ -277,14 +250,12 @@ public class Moderator implements GameActionListener {
             String[] combinedRoles = Stream.concat(Arrays.stream(location.getRoleNames()), Arrays.stream(locationScene.getRoleNames())).toArray(String[]::new);
 
             // get the requested destination and attempt to let the player work there
-
             String destination = BoardLayersListener.roomSelection(combinedRoles);
             int commaIndex = destination.indexOf(",");
             if (commaIndex != -1) {
                 destination = destination.substring(0, commaIndex).trim();
             }
             return work(playerList[currentPlayer], destination);
-
         }
         else if (command.get(0).equals("act")) {
             // attempt to let the player act
@@ -293,7 +264,6 @@ public class Moderator implements GameActionListener {
                 return true;
             }
             return act(playerList[currentPlayer]);
-
         } 
         else if (command.get(0).equals("rehearse")) {
             // attempt to let the player rehearse
@@ -370,7 +340,6 @@ public class Moderator implements GameActionListener {
             boardView.update(currentPlayer.getPlayerIndex() + 1, currentPlayer.getLocation().getName(), currentPlayer.getRank(),
                     currentPlayer.getDollars(), currentPlayer.getCredits(), "no active role");
         }
-
         return true;
     }
 
@@ -468,7 +437,6 @@ public class Moderator implements GameActionListener {
             // get the rank that the user requested
             Rank[] ranks = office.getRanks();
             Rank requestedRank = ranks[rank-2];
-
             if(requestedRank.getRankLevel() <= player.getRank()) {
                 BoardLayersListener.displayMessage("you are already this rank or higher");
                 return true;
@@ -509,7 +477,6 @@ public class Moderator implements GameActionListener {
                 boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                         player.getDollars(), player.getCredits(), "no active role");
             }
-
             return true;
         } catch (NumberFormatException e) {
             return true;
@@ -557,7 +524,6 @@ public class Moderator implements GameActionListener {
             boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                     player.getDollars(), player.getCredits(), "no active role");
         }
-
         
         // otherwise pay player based on on vs off card roles
         if(role.getOnCard() == true) {
@@ -586,7 +552,6 @@ public class Moderator implements GameActionListener {
             boardView.update(player.getPlayerIndex() + 1, player.getLocation().getName(), player.getRank(),
                     player.getDollars(), player.getCredits(), "no active role");
         }
-
         return false;
     }
 
@@ -616,7 +581,6 @@ public class Moderator implements GameActionListener {
                 onCardPlayers.add(scene.getRoles()[i].getActor());
             }
         }
-
         if(!playerOnCard) {
             BoardLayersListener.displayMessage("there is no one on a on card role, therefore no bonus payment");
         }

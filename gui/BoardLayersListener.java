@@ -25,6 +25,7 @@ public class BoardLayersListener extends JFrame implements Observer{
    private static JLabel boardLabel;  // the gameboard
    private static JLabel playerLabel;
    private static JLabel[] activeCardLabels;
+   private static JLabel[] activeBackLabels;
    private static JLabel[][] activeTakeLabels = new JLabel[10][];  // an array per set
    private static JLabel[][] playerLabels = new JLabel[8][6];  // array of player dice arrays
 
@@ -185,9 +186,6 @@ public class BoardLayersListener extends JFrame implements Observer{
       // add board label(image) to the lowest layer
       boardPane.add(boardLabel, 0);
 
-      // set 10 scene cards on the board
-      // activeCardLabels = setSceneCards(getSampleScenes(), getSampleSets());
-
       // revalidate and repaint to make sure components are displayed
       boardPane.revalidate();
       boardPane.repaint();
@@ -200,11 +198,14 @@ public class BoardLayersListener extends JFrame implements Observer{
    // scenes should ONLY contain the 10 scene cards that shall be place
    // sets should ONLY contain the 10 sets the scenes should be in
    public static void setSceneCards(Scene[] scenes, Set[] sets) {
+      removeSceneCards(activeCardLabels,activeTakeLabels);
       JLabel[] cardLabels = new JLabel[10];
+      JLabel[] backLabels = new JLabel[10];
       // for the 10 rooms that need scenes assign a scene
       for(int i = 0; i < 10; i++) {
          // get img file from
          String filename = "gui/img/card/" + scenes[i].getImg();
+         String cardBack = "gui/img/cardBack.png";
          // get set card placement area
          int x = sets[i].getX();
          int y = sets[i].getY();
@@ -217,16 +218,26 @@ public class BoardLayersListener extends JFrame implements Observer{
          cardLabel.setOpaque(true);
          cardLabel.setVisible(false);
 
+         JLabel backLabel = new JLabel();
+         ImageIcon backIcon = new ImageIcon(cardBack);
+         backLabel.setIcon(backIcon);
+         backLabel.setBounds(x, y, backIcon.getIconWidth(), backIcon.getIconHeight());
+         backLabel.setOpaque(true);
+         backLabel.setVisible(true);
+
          // Add the card to the lower layer
          boardPane.add(cardLabel, Integer.valueOf(1));
+         boardPane.add(backLabel, Integer.valueOf(2));
 
          // add to the array
          cardLabels[i] = cardLabel;
+         backLabels[i] = backLabel;
          
          // set up the takes on the board
          activeTakeLabels[i] = setTakes(sets[i].getTakes());
       }
       activeCardLabels = cardLabels;
+      activeBackLabels = backLabels;
    }
 
    // clean scene cards from board
@@ -244,8 +255,10 @@ public class BoardLayersListener extends JFrame implements Observer{
    public static void removeSceneCards(JLabel[] cardLabels, JLabel[][]takeLabels) {
       // for each set
       for (int i = 0; i < 10; i++) {
-         boardPane.remove(cardLabels[i]);
-         clearTakes(takeLabels[i]);
+         if(cardLabels != null && takeLabels != null && cardLabels[i] != null && takeLabels[i] != null) {
+            boardPane.remove(cardLabels[i]);
+            clearTakes(takeLabels[i]);
+         }
       }
       boardPane.revalidate();
       boardPane.repaint();
@@ -286,6 +299,7 @@ public class BoardLayersListener extends JFrame implements Observer{
    }
 
    public static void flipCard(int card) {
+      activeBackLabels[card].setVisible(false);
       activeCardLabels[card].setVisible(true);
    }
 
@@ -324,27 +338,6 @@ public class BoardLayersListener extends JFrame implements Observer{
       boardPane.revalidate();
       boardPane.repaint();
    }
-
-   //debug method can delete later
-   public static void printActiveTakeLabels() {
-      System.out.println("Printing activeTakeLabels:");
-  
-      for (int i = 0; i < activeTakeLabels.length; i++) {
-          System.out.print("Room " + i + ": ");
-          
-          // Check if the row (room) is null (uninitialized)
-          if (activeTakeLabels[i] == null) {
-              System.out.println("No takes");
-              continue;
-          }
-  
-          for (int j = 0; j < activeTakeLabels[i].length; j++) {
-              System.out.print((activeTakeLabels[i][j] != null ? "[Take Exists]" : "[null]") + " ");
-          }
-          
-          System.out.println(); // Move to the next line for the next room
-      }
-  }
 
    // removes all takes from the given set
    // NOTE: be careful to track what scenes have already been removed
@@ -569,7 +562,6 @@ public class BoardLayersListener extends JFrame implements Observer{
 
    public void setPlayersVisible(int currentPlayer, int rank, int x, int y) {
       // set up the dice to be visible
-      System.out.println("rank in visible = " + rank);
       playerLabels[currentPlayer][rank].setBounds(x, y, 40, 40);
       playerLabels[currentPlayer][rank].setVisible(true);
       boardPane.revalidate();
@@ -632,10 +624,28 @@ public class BoardLayersListener extends JFrame implements Observer{
    // then move the new player a couple pixels to the side
    public static void setPlayerLocation(int x, int y) {
       // maybe loop through player positions to check if there is already a player at location
+      for (int i = 0; i < totalPlayers; i++) {
+         for (int j = 0; j < playerLabels[i].length; j++) {
+            if (playerLabels[i][j].getX() == x && playerLabels[i][j].getY() == y) {
+               x += 10; // Move slightly to the right
+               y += 10; // Move slightly down
+               break;
+            }
+         }
+      }
       playerLabel.setBounds(x, y, 40, 40);
    }
 
    public static void removePlayerFromScene(int player, int rank, int x, int y) {
+      for (int i = 0; i < totalPlayers; i++) {
+         for (int j = 0; j < playerLabels[i].length; j++) {
+            if (playerLabels[i][j].getX() == x && playerLabels[i][j].getY() == y) {
+               x += 10; // Move slightly to the right
+               y += 10; // Move slightly down
+               break;
+            }
+         }
+      }
       playerLabels[player][rank].setBounds(x, y, 40, 40);
    }
 
